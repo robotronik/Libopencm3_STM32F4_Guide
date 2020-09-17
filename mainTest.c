@@ -1,34 +1,31 @@
 #include <stdio.h>
 
 #include "clock.h"
-#include "actuator.h"
 #include "uart.h"
+#include "gpio.h"
 
-void test_actuator();
-void test_com();
 
 int main() {
     
     //setup
     clock_setup();
-    //actuator_setup();
     uart_setup();
 
+    fprintf(stderr,"Test message on DEBUG uart");
+
     
+    // we setup a GPIO as an output to make the led blink on the board (PA5)
     
+    _gpio_setup_pin(RCC_GPIOA, GPIOA, GPIO5, GPIO_MODE_OUTPUT);
+    //main loop
     while(1){
-        //test_actuator();
-        fprintf(stderr,"un message de test\n");
-        delay_ms(500);
+        //toggle changes the state of the output specified
+        gpio_toggle(GPIOA, GPIO5);
+        //now we wait (in milliseconds !)
+        delay_ms(100);
+
     }
 }
 
-void test_actuator(){
-    actuator_set(ARM, 50);
-    actuator_set(FLAG, -60);
-}
 
-void test_com(){
-    //uart_send_string("super nul");
-    //printf("coucou \n");
-}
+

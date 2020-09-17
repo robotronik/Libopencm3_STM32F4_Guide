@@ -1,18 +1,40 @@
 # STM32F401REGuide
 how to flash a blinky program on a nucleo F401RE using libopencm3
 
+# Step by step !
+
+1. Install git and clone this repository (cf git conference/tutorial)
+    * `git clone --recurse-submodules URL_OF_THE_REPO`
+    * We will now assume your working directory is this folder ! (`cd` into it please)
+2. Install the necessary tools to cross compile and flash your code
+    * `sudo pacman -S arm-none-eabi-gcc arm-none-eabi-newlib openocd stlink`
+3. We now have to build the library that read and writes in the STM registeries for us : libopencm3 !
+    * `cd hal_common/libopencm3`
+    * `make`
+    * `cd ../..`
+4. Give yourself the rights to access the port to talk the card
+    * `make install_udev`
+5. Now we can build and flash the program with a simple:
+    * `make`
+
+The magic of everything that just happened will kindly be explained by a robotronik member :)
+
+# Quick explanation
+Gives you some hints about what file do what to know where to start your exploration of the project.
+
+* The `Makefile` contains the recipe to build our project and flash it also specifies where our files are hidden
+* If you are running a modern text editor/IDE it knows where the files are thanks to the `compile_command.json` file
+* We have to initialize the clock of the µcontroller in `clock.c`
+* We tell what input/output should do thanks to GPIO initilization procedures `gpio.c`
+* The main algorithm of the blinky program is in `mainTest.c`
+* Headers are located in `lowlevel/include` and you should go read them, they have documentation !
+
+#TODO
+Give hints about how to implement interruption from the blue button PC13
 
 
 
-
-
-
-
-
-
-
-
-
+## usual README of our repositories
 
 Reminder: To clone the submodule in the same time, use `git clone --recurse-submodules`, then don't forget to build libopencm3. You need to execute `make install_udev` one time to add the permission to flash.
 If you forgot to clone with submodule just run `git submodule update --init --recursive`

@@ -92,7 +92,7 @@ void usart1_isr(){
     fprintf(stderr,"message received : \n");
     uint16_t intReceived=14;
     //intReceived = usart_recv_blocking(COMM_USART);
-    fscanf(stdout,"%d",&intReceived);
+    fscanf(stdout,"%d",(int*)&intReceived);
     fprintf(stderr,"%d \n",intReceived);
   }
 
