@@ -29,7 +29,7 @@ Gives you some hints about what file do what to know where to start your explora
 * The main algorithm of the blinky program is in `mainTest.c`
 * Headers are located in `lowlevel/include` and you should go read them, they have documentation !
 
-#TODO
+# TODO
 Give hints about how to implement interruption from the blue button PC13
 
 
