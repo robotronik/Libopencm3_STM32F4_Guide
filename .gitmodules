@@ -1,0 +1,3 @@
+[submodule "hal_common/libopencm3"]
+	path = hal_common/libopencm3
+	url = git@github.com:libopencm3/libopencm3.git
