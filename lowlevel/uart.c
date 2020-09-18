@@ -28,34 +28,34 @@ void uart_setup()
 	nvic_enable_irq(DEBUG_UART_NVIC);
 
 	usart_enable(DEBUG_USART);
-	setbuf(stdout,NULL); //necessary for printf
-
-	// Open GPIO for USART
-	rcc_periph_clock_enable(COMM_PORT_TX_RCC);
-	gpio_mode_setup(COMM_PORT_TX, GPIO_MODE_AF, GPIO_PUPD_NONE, COMM_PIN_TX);
-	gpio_set_af(COMM_PORT_TX, DEBUG_AF_TX, COMM_PIN_TX);
-
-	rcc_periph_clock_enable(COMM_PORT_RX_RCC);
-	gpio_mode_setup(COMM_PORT_RX, GPIO_MODE_AF, GPIO_PUPD_NONE, COMM_PIN_RX);
-	gpio_set_af(COMM_PORT_RX, DEBUG_AF_RX, COMM_PIN_RX);
-
-	rcc_periph_clock_enable(COMM_RCC_USART);
-
-	usart_disable(COMM_USART);
-
-	usart_set_baudrate(COMM_USART, DEBUG_UART_SPEED);
-	usart_set_databits(COMM_USART, 8);
-	usart_set_stopbits(COMM_USART, USART_STOPBITS_1);
-	usart_set_mode(COMM_USART, USART_MODE_TX_RX);
-	usart_set_parity(COMM_USART, USART_PARITY_NONE);
-	usart_set_flow_control(COMM_USART, USART_FLOWCONTROL_NONE);
-
-	usart_enable_rx_interrupt(COMM_USART); // enable interrupts from reception events on usart 2
-/*TODO*/ //	usart_enable_tx_interrupt(COMM_USART); // enable interrupts from transmission events on usart 2
-	nvic_enable_irq(COMM_UART_NVIC);
-
-	usart_enable(COMM_USART);
 	setbuf(stderr,NULL); //necessary for printf
+
+// 	// Open GPIO for USART
+// 	rcc_periph_clock_enable(COMM_PORT_TX_RCC);
+// 	gpio_mode_setup(COMM_PORT_TX, GPIO_MODE_AF, GPIO_PUPD_NONE, COMM_PIN_TX);
+// 	gpio_set_af(COMM_PORT_TX, DEBUG_AF_TX, COMM_PIN_TX);
+
+// 	rcc_periph_clock_enable(COMM_PORT_RX_RCC);
+// 	gpio_mode_setup(COMM_PORT_RX, GPIO_MODE_AF, GPIO_PUPD_NONE, COMM_PIN_RX);
+// 	gpio_set_af(COMM_PORT_RX, DEBUG_AF_RX, COMM_PIN_RX);
+
+// 	rcc_periph_clock_enable(COMM_RCC_USART);
+
+// 	usart_disable(COMM_USART);
+
+// 	usart_set_baudrate(COMM_USART, DEBUG_UART_SPEED);
+// 	usart_set_databits(COMM_USART, 8);
+// 	usart_set_stopbits(COMM_USART, USART_STOPBITS_1);
+// 	usart_set_mode(COMM_USART, USART_MODE_TX_RX);
+// 	usart_set_parity(COMM_USART, USART_PARITY_NONE);
+// 	usart_set_flow_control(COMM_USART, USART_FLOWCONTROL_NONE);
+
+// 	usart_enable_rx_interrupt(COMM_USART); // enable interrupts from reception events on usart 2
+// /*TODO*/ //	usart_enable_tx_interrupt(COMM_USART); // enable interrupts from transmission events on usart 2
+// 	nvic_enable_irq(COMM_UART_NVIC);
+
+// 	usart_enable(COMM_USART);
+// 	setbuf(stdout,NULL); //necessary for printf
 
 }
 
@@ -70,9 +70,9 @@ void usart2_isr(){
     //char charReceived='z';
     //fscanf(stderr,"%c",&charReceived);
     //fprintf(stderr,"%c \n",charReceived);
-    int intReceived=1;
-    fscanf(stderr,"%d",&intReceived);
-    fprintf(stderr,"%d \n",intReceived);
+    char charReceived='a';
+    fscanf(stderr,"%c",&charReceived);
+    fprintf(stderr,"%c \n",charReceived);
   }
 
   /*TODO*/
