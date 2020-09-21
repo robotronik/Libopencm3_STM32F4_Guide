@@ -33,40 +33,40 @@ Gives you some hints about what file do what to know where to start your explora
 
 # Explanation
 Step by step explanation of the code. At any moment you may refer to the documentation (cf Doxygen part) 
-Only *mainTest.c*, <b>Motlowlevel/*.c</b> and <b>lowlevel/include/*.h</b> will be edited
+Only **mainTest.c**, __Motlowlevel/*.c__ and __lowlevel/include/*.h__ will be edited
 
 ## Usual Structure
 
 ### lowlevel/include/*.h
-You will first find a header with a *brief* description of the peripheral the *date* and the *author*, feel free to contact them if you encounter any problem
+You will first find a header with a **brief** description of the peripheral the **date** and the **author**, feel free to contact them if you encounter any problem
 
-A section with *include* from std, libopencm3, lowlevel/include
+A section with **include** from std, libopencm3, lowlevel/include
 
-A section with *definition* where all peripheral information are chosen/edited and all constant
+A section with **definition** where all peripheral information are chosen/edited and all constant
 
-Then a section with all *prototypes* for function with a *brief* description of the function and description of all *param*eters
+Then a section with all **prototypes** for function with a **brief** description of the function and description of all **param**eters
 
 ### lowlevel/*.c
 Including all needed .h files (in lowlevel/include)
 
-Function *starting with _* are not to be called in the main program.
+Function **starting with _** are not to be called in the main program.
 
-The first function is normally a *setup* used to initialize the peripheral
+The first function is normally a **setup** used to initialize the peripheral
 
 ### main
 Including all peripheral .h
 
-In main we start with all *setup and initialisation*
+In main we start with all **setup and initialisation**
 
-The the main code that most probably *loop* on itself
+The the main code that most probably **loop** on itself
 
 ## Clock
 In all libopencm3 project you start with the clock. It is normally a very simple module for the system_clock and implementing delay.
 
-Be aware of uC specific *architecture* the function may vary from a uC to another (e. g. F3 to F4)
-In setup it is important to know the *core frequency* of your uC (84 MHz for the STM32F4)
+Be aware of uC specific **architecture** the function may vary from a uC to another (e. g. F3 to F4)
+In setup it is important to know the **core frequency** of your uC (84 MHz for the STM32F4)
 
-It is almost the *same* for all project. You can probably copy paste it and only change the frequency.
+It is almost the **same** for all project. You can probably copy paste it and only change the frequency.
 
 ## GPIO
 GPIO are all the input/ output of the uC.
@@ -81,19 +81,19 @@ They are 3 setup methods for all purposes.
 
 ### Digital I/O
 The simplest one is to use a pin as an digital I/O, the setup is then:
-1. Enable *Clock* on Port (definition as RCC_GPIOX with X the port)
-2. Setup *mode* as an input or output with a pull-up, pull-down or neither
-3. Finally only for *output*, configuartion of the output (gpio output type, gpio pin speed)
+1. Enable **Clock** on Port (definition as RCC_GPIOX with X the port)
+2. Setup **mode** as an input or output with a pull-up, pull-down or neither
+3. Finally only for **output**, configuartion of the output (gpio output type, gpio pin speed)
 
 ### Alternate Function
 Pins on a uC are limited therefor multiple fuction are used on any pin, function are for example timer controlled pin, communication pin (uart, spi,etc. )
 All Information are found in the alternate function mapping in the datasheet (cf Hardware Documentation)
-Same setup as Digital I/O with mode af then set *alternate function* to correct af (number in the mapping)
+Same setup as Digital I/O with mode af then set **alternate function** to correct af (number in the mapping)
 
 ### TODO: Analog Pin Setup
 
 ## Example 1: Blink a LED
-We will use *clock* and *gpio*, if you run in an issue or want to debug the code further see Debug with uart
+We will use **clock** and **gpio**, if you run in an issue or want to debug the code further see Debug with uart
 Example is already done on master branch. On your local branch you can delete lowlevel/gpio.c, lowlevel/led.c, lowlevel/include/gpio.h, lowlevel/include/led.h.
 
 1. Let's setup the clock in main
@@ -108,6 +108,7 @@ Example is already done on master branch. On your local branch you can delete lo
 		*GPIO_PUPD_NONE* stands for: neither Pull up or Pull down
 	4. If we want to setup an output, we need to configure output via `gpio_set_output_options`
 		Type is push-pull or open drain, we normally use *GPIO_OTYPE_PP* 
+		Speed is normally *GPIO_OSPEED_50MHZ*
 	
 
 
