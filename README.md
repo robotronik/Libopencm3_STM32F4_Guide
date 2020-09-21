@@ -227,18 +227,25 @@ After the setup we need to start the timer.
 A given Timer as most of the time multiple possible output **channels**. Therefore it is important in the choice of the timer to check the timer but the ouput channel too.
 
 The most important parameters for the output channel are its purpose ( **mode** ) and its **value**
-	* The mode are defined use in the uC as PWM (cf. timer_set_oc_mode in libopencm3 documentation)
-	* The value defines the value of the timer on wich the event takes place
+* The mode are defined use in the uC as PWM (cf. timer_set_oc_mode in libopencm3 documentation)
+* The value defines the value of the timer on wich the event takes place
 
 We first have to setup the **gpio** in alternate_function mode
+
 1. See GPIO for the 4 needed steps
+
 	It is important to check the af number for your chosen timer
 
 After the gpio is fully setup we can setup the output channel
+
 2. **Disable** the output channel to not generate unforseen event
+
 3. Choose the **mode** for your output channel
+
 4. Enable **preload**
+
 5. Choose the **value**
+
 6. **Enable** the output channel
 
 ## Example 2: Generate a PWM signal with a given pulse width on pin
@@ -248,6 +255,7 @@ Example is already done on master branch. On your local branch you can delete lo
 You can also use gpio from the previous example
 
 1. Let's setup the clock in main
+
 2. Create or Edit timer.h and timer.c
 
 	`touch lowlevel/timer.c`
