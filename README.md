@@ -197,16 +197,16 @@ A **timer** is a sequential circuit that **counts** by increasing or decreasing 
 We can then use said **event** to control a pin (output channel) as an **alternate function**.
 
 So there are 3 functions we want in our timer module:
-	* Setup/configure timer
-	* Start timer
-	* Setup/configure output channel
+* Setup/configure timer
+* Start timer
+* Setup/configure output channel
 
 ### Setup Timer
 A STM32F4 as a lot of timer with different possibilities. For illustartion purpose we will use only Timer 1 and 2, because they are the most potent one.
 
 The most important parameters for a timer are the **prescaler** and the **period**.
-	* The prescaler transforms the clock frequency to a lower frequency easier to aprehend for the user. Most of the time we for example divide the clock to make a 1 us tick
-	* The period is then the temporal distance between two equal values
+* The prescaler transforms the clock frequency to a lower frequency easier to aprehend for the user. Most of the time we for example divide the clock to make a 1 us tick
+* The period is then the temporal distance between two equal values
 
 1. As the timer is also a periph we need to enable the **clock**
 2. Choose a **mode** for your Timer (it will not be explained in details as it is in most case not changed from example 2)
