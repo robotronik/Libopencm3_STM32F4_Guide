@@ -27,6 +27,7 @@
 #define LED_GPIO_RCC			RCC_GPIOA
 #define LED_PORT				GPIOA
 #define LED_PIN					GPIO5
+/** @} */
 
 /**
  * @brief Setup GPIO on pin
