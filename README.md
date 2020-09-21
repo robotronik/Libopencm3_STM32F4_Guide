@@ -64,6 +64,7 @@ The the main code that most probably **loop** on itself
 In all libopencm3 project you start with the clock. It is normally a very simple module for the system_clock and implementing delay.
 
 Be aware of uC specific **architecture** the function may vary from a uC to another (e. g. F3 to F4)
+
 In setup it is important to know the **core frequency** of your uC (84 MHz for the STM32F4)
 
 It is almost the **same** for all project. You can probably copy paste it and only change the frequency.
@@ -87,13 +88,16 @@ The simplest one is to use a pin as an digital I/O, the setup is then:
 
 ### Alternate Function
 Pins on a uC are limited therefor multiple fuction are used on any pin, function are for example timer controlled pin, communication pin (uart, spi,etc. )
+
 All Information are found in the alternate function mapping in the datasheet (cf Hardware Documentation)
+
 Same setup as Digital I/O with mode af then set **alternate function** to correct af (number in the mapping)
 
 ### TODO: Analog Pin Setup
 
 ## Example 1: Blink a LED
 We will use **clock** and **gpio**, if you run in an issue or want to debug the code further see Debug with uart
+
 Example is already done on master branch. On your local branch you can delete lowlevel/gpio.c, lowlevel/led.c, lowlevel/include/gpio.h, lowlevel/include/led.h.
 
 1. Let's setup the clock in main
@@ -105,10 +109,13 @@ Example is already done on master branch. On your local branch you can delete lo
 	1. Parameters are rcc_clken, port, pin, mode
 	2. Clock enbale is done via `rcc_periph_clock_enable`
 	3. Setup mode via `gpio_mode_setup`
-		*GPIO_PUPD_NONE* stands for: neither Pull up or Pull down
+
+		* GPIO_PUPD_NONE* stands for: neither Pull up or Pull down
 	4. If we want to setup an output, we need to configure output via `gpio_set_output_options`
-		Type is push-pull or open drain, we normally use *GPIO_OTYPE_PP* 
-		Speed is normally *GPIO_OSPEED_50MHZ*
+
+		* Type is push-pull or open drain, we normally use *GPIO_OTYPE_PP* 
+
+		* Speed is normally *GPIO_OSPEED_50MHZ*
 	
 
 
