@@ -189,7 +189,62 @@ We want to use the onboard LED PA5
 	```
 
 10. **Party**
-	
+
+## Timers
+
+A **timer** is a sequential circuit that **counts** by increasing or decreasing a register. It **resets** and **generates a event**, often used as an **interrupt**, when said register exceeds or falls behind a **predefined value**.
+
+We can then use said **event** to control a pin (output channel) as an **alternate function**.
+
+So there are 3 functions we want in our timer module:
+	* Setup/configure timer
+	* Start timer
+	* Setup/configure output channel
+
+### Setup Timer
+A STM32F4 as a lot of timer with different possibilities. For illustartion purpose we will use only Timer 1 and 2, because they are the most potent one.
+
+The most important parameters for a timer are the **prescaler** and the **period**.
+	* The prescaler transforms the clock frequency to a lower frequency easier to aprehend for the user. Most of the time we for example divide the clock to make a 1 us tick
+	* The period is then the temporal distance between two equal values
+
+1. As the timer is also a periph we need to enable the **clock**
+2. Choose a **mode** for your Timer (it will not be explained in details as it is in most case not changed from example 2)
+3. For advanced Timer, you need to allow **breaks**
+4. Set the **prescaler**
+5. Choose the **starting value**
+6. Enable **preload**
+7. Choose if the timer should run **continuously**
+8. Set the **period** 
+
+### Start Timer
+After the setup we need to start the timer. 
+
+1. Generate a **update** event
+2. Enable **counter**
+
+### Setup Output Channel
+A given Timer as most of the time multiple possible output **channels**. Therefore it is important in the choice of the timer to check the timer but the ouput channel too.
+
+The most important parameters for the output channel are its purpose ( **mode** ) and its **value**
+	* The mode are defined use in the uC as PWM (cf. timer_set_oc_mode in libopencm3 documentation)
+	* The value defines the value of the timer on wich the event takes place
+
+We first have to setup the **gpio** in alternate_function mode
+1. See GPIO for the 4 needed steps
+	It is important to check the af number for your chosen timer
+
+After the gpio is fully setup we can setup the output channel
+2. **Disable** the output channel to not generate unforseen event
+3. Choose the **mode** for your output channel
+4. Enable **preload**
+5. Choose the **value**
+6. **Enable** the output channel
+
+## Example 2: Generate a PWM signal with a given duty cycle on pin
+We will use **clock** and **gpio**, if you run in an issue or want to debug the code further see Debug with uart
+
+Example is already done on master branch. On your local branch you can delete lowlevel/gpio.c, lowlevel/led.c, lowlevel/include/gpio.h, lowlevel/include/led.h.
 
 
 # usual README of our repositories

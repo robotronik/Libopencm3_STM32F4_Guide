@@ -1,7 +1,7 @@
 /**
  * @file
  * 
- * This file is part of cdfr2020BaseRoulanteRework
+ * This file is part of STM32F401 Guide
  * 
  * @brief This implements the functions required setup a timer and its output channel  
  * 
