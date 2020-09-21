@@ -1,7 +1,7 @@
 /**
  * @file
  * 
- * This file is part of cdfr2020CerveauProg
+ * This file is part of STM32F401 Guide
  * 
  * @brief This implements the setup of the system clock, acces fonction (debug) and temporal fonction (delay)  
  * 
@@ -16,6 +16,8 @@
 #pragma once
 
 #include <stdint.h>
+#include <libopencm3/cm3/systick.h>
+#include <libopencm3/stm32/rcc.h>
 
 //define from previous tsmr
 // // RCC Clock Frequency [Hz]

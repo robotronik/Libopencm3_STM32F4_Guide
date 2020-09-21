@@ -1,6 +1,6 @@
 #include "timer.h"
 
-void timer_setup(enum rcc_periph_clken rcc_clken, uint32_t timer_peripheral, uint32_t prescaler, uint32_t period){
+void _timer_setup(enum rcc_periph_clken rcc_clken, uint32_t timer_peripheral, uint32_t prescaler, uint32_t period){
 	/* Enable timer clock */
 	rcc_periph_clock_enable(rcc_clken);
     
@@ -28,7 +28,7 @@ void timer_setup(enum rcc_periph_clken rcc_clken, uint32_t timer_peripheral, uin
 	
 }
 
-void timer_setup_output_c(uint32_t timer_peripheral, enum tim_oc_id oc_id, enum tim_oc_mode oc_mode, uint32_t oc_value){
+void _timer_setup_output_c(uint32_t timer_peripheral, enum tim_oc_id oc_id, enum tim_oc_mode oc_mode, uint32_t oc_value){
 	/*first disable output to be sure*/
 	timer_disable_oc_output(timer_peripheral, oc_id);
 
@@ -41,7 +41,7 @@ void timer_setup_output_c(uint32_t timer_peripheral, enum tim_oc_id oc_id, enum 
 	timer_enable_oc_output(timer_peripheral, oc_id);
 }
 
-void timer_start(uint32_t timer_peripheral){
+void _timer_start(uint32_t timer_peripheral){
 	/*Start counting after start event*/
 	timer_generate_event(timer_peripheral, TIM_EGR_UG);
 	timer_enable_counter(timer_peripheral);

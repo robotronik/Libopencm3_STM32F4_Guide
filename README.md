@@ -1,5 +1,5 @@
 # STM32F401REGuide
-how to flash a blinky program on a nucleo F401RE using libopencm3
+how to flash a program on a nucleo F401RE using libopencm3
 
 # Step by step !
 
@@ -12,37 +12,114 @@ how to flash a blinky program on a nucleo F401RE using libopencm3
     * `cd hal_common/libopencm3`
     * `make`
     * `cd ../..`
-4. Give yourself the rights to access the port to talk the card
+5. Give yourself the rights to access the port to talk the card
     * `make install_udev`
-5. Now we can build and flash the program with a simple:
+6. Now we can build and flash the program with a simple:
     * `make`
 
 The magic of everything that just happened will kindly be explained by a robotronik member :)
 
-# Quick explanation
+# Quick Overview
 Gives you some hints about what file do what to know where to start your exploration of the project.
 
-* The `Makefile` contains the recipe to build our project and flash it also specifies where our files are hidden
-* If you are running a modern text editor/IDE it knows where the files are thanks to the `compile_command.json` file
-* We have to initialize the clock of the µcontroller in `clock.c`
-* We tell what input/output should do thanks to GPIO initilization procedures `gpio.c`
-* The main algorithm of the blinky program is in `mainTest.c`
-* Headers are located in `lowlevel/include` and you should go read them, they have documentation !
+* `Makefile` contains the recipe to build our project and flash it also specifies where our files are hidden
+* `compile_command.json` file contains the location of all files for your modern text editor/IDE
+* `README.md` is where you actually are
+* `install_udev.sh` is a script to give acces to the port used in the Step by step
+* `doxygen` and `doxygenConf` are used to generate documentation for the project (cf. Doxygen part for more information)
+* `hal_common` contains the `linker_scrpits` and all `libopencm3` files
+* `lowlevel` contains the code for your peripheral as Clock, GPIOs, Timers with the .h in `lowlevel/include`
+* `mainTest.c` is the main program
 
-# TODO
-Give hints about how to implement interruption from the blue button PC13
+# Explanation
+Step by step explanation of the code. At any moment you may refer to the documentation (cf Doxygen part) 
+Only *mainTest.c*, <b>Motlowlevel/*.c</b> and <b>lowlevel/include/*.h</b> will be edited
+
+## Usual Structure
+
+### lowlevel/include/*.h
+You will first find a header with a *brief* description of the peripheral the *date* and the *author*, feel free to contact them if you encounter any problem
+
+A section with *include* from std, libopencm3, lowlevel/include
+
+A section with *definition* where all peripheral information are chosen/edited and all constant
+
+Then a section with all *prototypes* for function with a *brief* description of the function and description of all *param*eters
+
+### lowlevel/*.c
+Including all needed .h files (in lowlevel/include)
+
+Function *starting with _* are not to be called in the main program.
+
+The first function is normally a *setup* used to initialize the peripheral
+
+### main
+Including all peripheral .h
+
+In main we start with all *setup and initialisation*
+
+The the main code that most probably *loop* on itself
+
+## Clock
+In all libopencm3 project you start with the clock. It is normally a very simple module for the system_clock and implementing delay.
+
+Be aware of uC specific *architecture* the function may vary from a uC to another (e. g. F3 to F4)
+In setup it is important to know the *core frequency* of your uC (84 MHz for the STM32F4)
+
+It is almost the *same* for all project. You can probably copy paste it and only change the frequency.
+
+## GPIO
+GPIO are all the input/ output of the uC.
+
+They can be used normaly in 4 possibilities:
+* Digital Input
+* Digital Output
+* Analog Pin
+* Alternate Function
+
+They are 3 setup methods for all purposes.
+
+### Digital I/O
+The simplest one is to use a pin as an digital I/O, the setup is then:
+1. Enable *Clock* on Port (definition as RCC_GPIOX with X the port)
+2. Setup *mode* as an input or output with a pull-up, pull-down or neither
+3. Finally only for *output*, configuartion of the output (gpio output type, gpio pin speed)
+
+### Alternate Function
+Pins on a uC are limited therefor multiple fuction are used on any pin, function are for example timer controlled pin, communication pin (uart, spi,etc. )
+All Information are found in the alternate function mapping in the datasheet (cf Hardware Documentation)
+Same setup as Digital I/O with mode af then set *alternate function* to correct af (number in the mapping)
+
+### TODO: Analog Pin Setup
+
+## Example 1: Blink a LED
+We will use *clock* and *gpio*, if you run in an issue or want to debug the code further see Debug with uart
+Example is already done on master branch. On your local branch you can delete lowlevel/gpio.c, lowlevel/led.c, lowlevel/include/gpio.h, lowlevel/include/led.h.
+
+1. Let's setup the clock in main
+2. Create or Edit gpio.h and gpio.c
+	`touch lowlevel/gpio.c`
+	`touch lowlevel/include/gpio.h`
+3. For GPIO we only need a setup function
+	in setup:
+	1. Parameters are rcc_clken, port, pin, mode
+	2. Clock enbale is done via `rcc_periph_clock_enable`
+	3. Setup mode via `gpio_mode_setup`
+		*GPIO_PUPD_NONE* stands for: neither Pull up or Pull down
+	4. If we want to setup an output, we need to configure output via `gpio_set_output_options`
+		Type is push-pull or open drain, we normally use *GPIO_OTYPE_PP* 
+	
 
 
-
-## usual README of our repositories
+# usual README of our repositories
 
 Reminder: To clone the submodule in the same time, use `git clone --recurse-submodules`, then don't forget to build libopencm3. You need to execute `make install_udev` one time to add the permission to flash.
 If you forgot to clone with submodule just run `git submodule update --init --recursive`
 
 To compile and flash you need gcc-arm-none-eabi, st-link and  openocd
 
-To build: `mainTest.elf`
-To flash: `mainTest.flash`
+To build: `make mainTest.elf`
+To flash: `make mainTest.flash`
 To clean: `make clean`
 
 ## Software documentation
@@ -77,6 +154,9 @@ Note: You must have a latex distribution on your computer that has `pdflatex` co
 --> install picocom
 --> find your card `ls /dev` . It should be /dev/ttyACM0
 --> run picocom with `picocom -b 9600 /dev/ttyACM0`
+
+--> in main setup uart
+--> in code use fprintf(stderr,message) to debug
 
 ## Coding style
 

@@ -28,7 +28,7 @@
  * @param prescaler    the input frequency of the timer (sys_clk) is divided by this factor
  * @param period    period of the timer in us
  */
-void timer_setup(enum rcc_periph_clken rcc_clken, uint32_t timer_peripheral, uint32_t prescaler, uint32_t period);
+void _timer_setup(enum rcc_periph_clken rcc_clken, uint32_t timer_peripheral, uint32_t prescaler, uint32_t period);
 
 /**
  * @brief This function configure the output comparator of a channel for the timer specified
@@ -38,11 +38,11 @@ void timer_setup(enum rcc_periph_clken rcc_clken, uint32_t timer_peripheral, uin
  * @param oc_mode    different mode used for the timer
  * @param oc_value    initial value of the duty cycle
  */
-void timer_setup_output_c(uint32_t timer_peripheral, enum tim_oc_id oc_id, enum tim_oc_mode oc_mode, uint32_t oc_value);
+void _timer_setup_output_c(uint32_t timer_peripheral, enum tim_oc_id oc_id, enum tim_oc_mode oc_mode, uint32_t oc_value);
 
 /**
  * @brief This function starts the given timer
  * 
  * @param timer_peripheral    selected timer
  */
-void timer_start(uint32_t timer_peripheral);
+void _timer_start(uint32_t timer_peripheral);

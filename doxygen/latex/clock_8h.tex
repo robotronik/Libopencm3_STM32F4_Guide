@@ -1,0 +1,57 @@
+\hypertarget{clock_8h}{}\doxysection{lowlevel/include/clock.h File Reference}
+\label{clock_8h}\index{lowlevel/include/clock.h@{lowlevel/include/clock.h}}
+
+
+This implements the setup of the system clock, acces fonction (debug) and temporal fonction (delay) ~\newline
+  
+
+
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$libopencm3/cm3/systick.\+h$>$}\newline
+{\ttfamily \#include $<$libopencm3/stm32/rcc.\+h$>$}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{clock_8h_a9ff7a0cd5408ee514628ac9528ff73ec}\label{clock_8h_a9ff7a0cd5408ee514628ac9528ff73ec}} 
+void \mbox{\hyperlink{clock_8h_a9ff7a0cd5408ee514628ac9528ff73ec}{clock\+\_\+setup}} ()
+\begin{DoxyCompactList}\small\item\em This function setup the system clock. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{clock_8h_a0062e7b9ce4461a589b8fbc6f86a8e6f}\label{clock_8h_a0062e7b9ce4461a589b8fbc6f86a8e6f}} 
+uint32\+\_\+t \mbox{\hyperlink{clock_8h_a0062e7b9ce4461a589b8fbc6f86a8e6f}{clock\+\_\+get\+\_\+systicks}} ()
+\begin{DoxyCompactList}\small\item\em This function gets the number of systicks since starting. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{clock_8h_ab7cce8122024d7ba47bf10f434956de4}{delay\+\_\+ms}} (uint32\+\_\+t ms)
+\begin{DoxyCompactList}\small\item\em This function implements a delay in ms. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This implements the setup of the system clock, acces fonction (debug) and temporal fonction (delay) ~\newline
+ 
+
+This file is part of S\+T\+M32\+F401 Guide
+
+\begin{DoxyDate}{Date}
+07/2020 ~\newline
+
+\end{DoxyDate}
+Licence \+:
+
+Robotronik Phelma \begin{DoxyAuthor}{Author}
+Phenix\+Robotik N\+P\+Xav Benano Trukbidule 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{clock_8h_ab7cce8122024d7ba47bf10f434956de4}\label{clock_8h_ab7cce8122024d7ba47bf10f434956de4}} 
+\index{clock.h@{clock.h}!delay\_ms@{delay\_ms}}
+\index{delay\_ms@{delay\_ms}!clock.h@{clock.h}}
+\doxysubsubsection{\texorpdfstring{delay\_ms()}{delay\_ms()}}
+{\footnotesize\ttfamily void delay\+\_\+ms (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{ms }\end{DoxyParamCaption})}
+
+
+
+This function implements a delay in ms. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ms} & value of delay in ms \\
+\hline
+\end{DoxyParams}
