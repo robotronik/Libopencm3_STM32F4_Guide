@@ -1,0 +1,14 @@
+# Atom editor
+.vscode
+
+# built files
+*.o
+*.elf
+*.hex
+*.d
+
+# log files
+*.log
+
+# doxygen output
+doxygen
