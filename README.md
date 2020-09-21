@@ -148,14 +148,12 @@ We want to use the onboard LED PA5
 9. Write a program
 	For example a blinking led at a given frequency/delay
 
-	`void test_led(uint32_t delay){
-		led_setup();
+	`led_setup();
 	
 		while(1){
 			led_blink();
 			delay_ms(delay);
-		}
-	}`
+		}`
 
 10. Party
 	
