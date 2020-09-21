@@ -7,6 +7,6 @@ void pwm_setup() {
     _timer_start(PWM_TIM);
 }
 
-void pwm_set_pulse_width(uint32_t timer_peripheral, enum tim_oc_id oc_id, uint32_t pulse_width) {
-    timer_set_oc_value(timer_peripheral, oc_id, pulse_width);
+void pwm_set_pulse_width(uint32_t pulse_width) {
+    timer_set_oc_value(PWM_TIM, PWM_OC_ID, pulse_width);
 }

@@ -18,7 +18,7 @@ how to flash a program on a nucleo F401RE using libopencm3
     * `make`
 
 The magic of everything that just happened will kindly be explained by a robotronik member :)
-
+    
 # Quick Overview
 Gives you some hints about what file do what to know where to start your exploration of the project.
 
@@ -241,12 +241,150 @@ After the gpio is fully setup we can setup the output channel
 5. Choose the **value**
 6. **Enable** the output channel
 
-## Example 2: Generate a PWM signal with a given duty cycle on pin
+## Example 2: Generate a PWM signal with a given pulse width on pin
 We will use **clock**, **gpio** and **timer**, if you run in an issue or want to debug the code further see Debug with uart
 
 Example is already done on master branch. On your local branch you can delete lowlevel/timer.c, lowlevel/pwm.c, lowlevel/include/timer.h, lowlevel/include/timer.h.
 You can also use gpio from the previous example
 
+1. Let's setup the clock in main
+2. Create or Edit timer.h and timer.c
+
+	`touch lowlevel/timer.c`
+
+	`touch lowlevel/include/timer.h`
+
+3. For Timer we first need a setup function `_timer_setup`
+
+    in `_timer_setup`:
+
+    1. Parameters are rcc_clken, timer_peripheral, prescaler, period
+
+    2. Clock enbale is done via `rcc_periph_clock_enable`
+
+    	`rcc_periph_clock_enable(rcc_clken)`
+
+    3. Set timer mode via `timer_set_mode`
+
+        `timer_set_mode(timer_peripheral, TIM_CR1_CKD_CK_INT, TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP)`
+
+        * *TIM_CR1_CKD_CK_INT* means no division ratio for the clock
+        * *TIM_CR1_CMS_EDGE* means aligned on edge
+        * *TIM_CR1_DIR_UP* means the timer is counting up
+
+    4. For advanced timer, enable break via `timer_enable_break_main_output`
+
+    5. Set prescaler via `timer_set_prescaler`
+
+    6. Set the starting value either as a parameter or 0 via `timer_set_repetition_counter`
+
+    7. Enbale preload via `timer_enable_preload`
+
+    8. We choose to count in countinous mode via `timer_continuous_mode`
+
+    9. Set period via `timer_set_period`
+
+4. Then we need a start timer fucntion `_timer_start`
+
+    1. Generate the update event via `timer_generate_event(timer_peripheral, TIM_EGR_UG)`
+        * *TIM_EGR_UG* is the update event
+
+    2. Enable counter via `timer_enable_counter`
+
+5. Function to setup output channel `_timer_setup_output_c`
+    They can be multiple channel active for one timer so this function could be called more than one time per timer
+
+    OC_id, OC_mode, OC_value are specific to the function of your timer 
+
+    Because we are using a pin we need to disable it first and enable it afterward
+
+    1. Disable oc via `timer_disable_oc_output`
+
+    2. Set mode via `timer_set_oc_mode`
+
+    3. Enable preload via `timer_enable_oc_preload`
+
+    4. Set oc value, value that create an event via `timer_set_oc_value`
+
+    5. Enable oc via `timer_enable_oc_output`
+
+6. Add a function to `gpio` to setup alternate function
+    
+    in `_gpio_setup_pin` change `gpio_mode_setup` to this:
+
+    `gpio_mode_setup(gpio_port,GPIO_MODE_AF,GPIO_PUPD_NONE,gpio_pin)`
+
+    and add `gpio_set_af` with the new parameter gpio_altfun
+
+    `gpio_set_af(gpio_port, gpio_altfun, gpio_pin)`
+
+7. We want a PWM module, let's create it
+
+	`touch lowlevel/pwm.c`
+
+	`touch lowlevel/include/pwm.h`
+
+We want to setup the pwm and have an user function to change the pulse width
+
+8. Prototypes in `pwm.h`
+
+    `void pwm_setup()`
+
+    `void pwm_set_pulse_width(uint32_t pulse_width)`
+
+Looking at the alternate function mapping we choose TIM1 and PA10. PA10 is the 3rd channel of TIM1 ( *TIM_OC3* ). And OC from TIM1 is the alternate function 1 from PA10 ( *GPIO_AF1* ).
+
+We choose a prescaler of 84 to get tick in us and a period of 20000 us = 20 ms <=> 50 Hz. Imagine for example the driving of a servo.
+
+We want to make a PWM and gladly there are already PWM mode on STM32F4: *TIM_OCM_PWM1* (High then Low) and *TIM_OCM_PWM2* (Low then High)
+
+9. Definitions
+
+    ```
+    #define PWM_PRESCALE (84)
+    #define PWM_PERIOD (20000)
+    
+    #define PWM_TIM     TIM1
+    #define PWM_TIM_RCC     RCC_TIM1
+    #define PWM_GPIO_RCC_EN     RCC_GPIOA
+    #define PWM_PORT_EN     GPIOA
+    #define PWM_PIN_EN      GPIO10
+    
+    #define PWM_AF      GPIO_AF1
+    #define PWM_OC_ID   TIM_OC3
+    #define PWM_OC_MODE     TIM_OCM_PWM1
+    ```
+
+10. Write `pwm_setup` using `gpio` and `timer`
+
+    ```
+    _timer_setup(PWM_TIM_RCC, PWM_TIM, PWM_PRESCALE, PWM_PERIOD);
+    _gpio_setup_pin_af(PWM_GPIO_RCC_EN, PWM_PORT_EN, PWM_PIN_EN, PWM_AF);
+    _timer_setup_output_c(PWM_TIM, PWM_OC_ID, PWM_OC_MODE, 0);
+    _timer_start(PWM_TIM);
+    ```
+
+11. Write `pwm_set_pulse_width` changing the oc_value
+
+    `timer_set_oc_value(PWM_TIM, PWM_OC_ID, pulse_width)`
+
+12. Write a program
+
+    Varying the pulsewidth in time
+
+    ```
+    pwm_setup();
+
+    uint32_t pw = 10;
+
+    while (1) {
+        pw = (pw+100)%20000;
+        pwm_set_pulse_width(pw);
+        delay_ms(100);
+    }
+    ```
+
+13. **Party Harder**
 
 # usual README of our repositories
 
@@ -291,7 +429,6 @@ Note: You must have a latex distribution on your computer that has `pdflatex` co
 --> install picocom
 --> find your card `ls /dev` . It should be /dev/ttyACM0
 --> run picocom with `picocom -b 9600 /dev/ttyACM0`
-
 --> in main setup uart
 --> in code use fprintf(stderr,message) to debug
 

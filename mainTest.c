@@ -34,7 +34,7 @@ void test_pwm(){
 
     while (1) {
         pw = (pw+100)%20000;
-        pwm_set_pulse_width(PWM_TIM, PWM_OC_ID, pw);
+        pwm_set_pulse_width(pw);
         delay_ms(100);
     }
 }

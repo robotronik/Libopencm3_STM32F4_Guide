@@ -40,4 +40,4 @@ void pwm_setup();
 /**
  * @brief Setup PWM pulse width
 */
-void pwm_set_pulse_width(uint32_t timer_peripheral, enum tim_oc_id oc_id, uint32_t pulse_width);
+void pwm_set_pulse_width(uint32_t pulse_width);
