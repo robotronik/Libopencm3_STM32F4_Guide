@@ -242,9 +242,10 @@ After the gpio is fully setup we can setup the output channel
 6. **Enable** the output channel
 
 ## Example 2: Generate a PWM signal with a given duty cycle on pin
-We will use **clock** and **gpio**, if you run in an issue or want to debug the code further see Debug with uart
+We will use **clock**, **gpio** and **timer**, if you run in an issue or want to debug the code further see Debug with uart
 
-Example is already done on master branch. On your local branch you can delete lowlevel/gpio.c, lowlevel/led.c, lowlevel/include/gpio.h, lowlevel/include/led.h.
+Example is already done on master branch. On your local branch you can delete lowlevel/timer.c, lowlevel/pwm.c, lowlevel/include/timer.h, lowlevel/include/timer.h.
+You can also use gpio from the previous example
 
 
 # usual README of our repositories
