@@ -104,18 +104,60 @@ Example is already done on master branch. On your local branch you can delete lo
 2. Create or Edit gpio.h and gpio.c
 	`touch lowlevel/gpio.c`
 	`touch lowlevel/include/gpio.h`
-3. For GPIO we only need a setup function
-	in setup:
+3. For GPIO we only need a setup function `_gpio_setup_pin`
+	in `_gpio_setup_pin`:
 	1. Parameters are rcc_clken, port, pin, mode
 	2. Clock enbale is done via `rcc_periph_clock_enable`
+		`rcc_periph_clock_enable(rcc_clken)`
 	3. Setup mode via `gpio_mode_setup`
-
-		* GPIO_PUPD_NONE* stands for: neither Pull up or Pull down
+		`gpio_mode_setup(port,mode,GPIO_PUPD_NONE,pin)`
+		* *GPIO_PUPD_NONE* stands for: neither Pull up or Pull down
 	4. If we want to setup an output, we need to configure output via `gpio_set_output_options`
-
+		`gpio_set_output_options(port, GPIO_OTYPE_PP,GPIO_OSPEED_50MHZ, pin)`
 		* Type is push-pull or open drain, we normally use *GPIO_OTYPE_PP* 
-
 		* Speed is normally *GPIO_OSPEED_50MHZ*
+4. We want a LED module, let's create it
+	`touch lowlevel/led.c`
+	`touch lowlevel/include/led.h`
+
+We want to setup the led and have an user function to blink it
+5. Prototypes in `led.h`
+	`void led_setup()`
+	`void led_blink()`
+
+We want to use the onboard LED PA5
+6. Definitions
+	1. port is A 
+		`#define LED_PORT GPIOA`
+	2. pin is 5 
+		`#define LED_PIN GPIO5`
+	3. rcc_clken should be rcc for our port (A)
+		`#define LED_GPIO_RCC RCC_GPIOA`
+
+7. Write `led_setup` using `_gpio_setup_pin`
+	PA5 should be an output to control LED
+	`_gpio_setup_pin(LED_GPIO_RCC, LED_PORT, LED_PIN, GPIO_MODE_OUTPUT)`
+
+8. Write `led_blink` using libopencm3
+	In libopencm3 operation on digital I/O are clear, set, toggle, get.
+
+	We want to toggle LED state by calling the function
+
+	`gpio_toggle(LED_PORT, LED_PIN)`
+	 
+9. Write a program
+	For example a blinking led at a given frequency/delay
+
+	`void test_led(uint32_t delay){
+		led_setup();
+	
+		while(1){
+			led_blink();
+			delay_ms(delay);
+		}
+	}`
+
+10. Party
 	
 
 
