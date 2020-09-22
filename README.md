@@ -343,7 +343,7 @@ We want to setup the PWM and have an user function to change the pulse width
 
 Looking at the alternate function mapping we choose TIM1 and PA10. PA10 is the 3rd channel of TIM1 ( *TIM_OC3* ). And OC from TIM1 is the alternate function 1 from PA10 ( *GPIO_AF1* ).
 
-We choose a prescaler of 84 to get tick in us and a period of 20000 us = 20 ms <=> 50 Hz. Imagine for example the driving of a servo.
+We choose a prescaler of 84 to get tick in us and a period of 20 000 us = 20 ms <=> 50 Hz. Imagine for example the driving of a servo.
 
 We want to make a PWM and gladly there are already PWM mode on STM32F4: *TIM_OCM_PWM1* (High then Low) and *TIM_OCM_PWM2* (Low then High)
 
@@ -395,7 +395,7 @@ We want to make a PWM and gladly there are already PWM mode on STM32F4: *TIM_OCM
 
 13. **Party Harder**
 
-Bonus: Using a timer enables to do anything in the main parallel to the timer. We can for example imagine a modification to example 1 using a timer so we can execute code while the LED is blinking.
+**Bonus**: Using a timer enables to do anything in the main parallel to the timer. We can for example imagine a modification to example 1 using a timer so we can execute code while the LED is blinking.
 
 
 # usual README of our repositories
