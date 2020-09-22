@@ -1,18 +1,18 @@
-# STM32F401REGuide
-how to flash a program on a nucleo F401RE using libopencm3
+# STM32F401RE Guide
+How to flash and write a program on a nucleo F401RE using libopencm3
 
 # Step by step !
 
-1. Install git and clone this repository (cf git conference/tutorial)
+1. Install git and clone this repository (see git conference/tutorial)
     * `git clone --recurse-submodules URL_OF_THE_REPO`
     * We will now assume your working directory is this folder ! (`cd` into it please)
 2. Install the necessary tools to cross compile and flash your code
     * `sudo pacman -S arm-none-eabi-gcc arm-none-eabi-newlib openocd stlink`
-3. We now have to build the library that read and writes in the STM registeries for us : libopencm3 !
+3. We now have to build the library that reads and writes in the STM registers for us : libopencm3!
     * `cd hal_common/libopencm3`
     * `make`
     * `cd ../..`
-5. Give yourself the rights to access the port to talk the card
+5. Give yourself the rights to access the port to talk to the card
     * `make install_udev`
 6. Now we can build and flash the program with a simple:
     * `make`
@@ -20,20 +20,20 @@ how to flash a program on a nucleo F401RE using libopencm3
 The magic of everything that just happened will kindly be explained by a robotronik member :)
     
 # Quick Overview
-Gives you some hints about what file do what to know where to start your exploration of the project.
+Gives you some hints about what file does what to know where to start your exploration of the project.
 
 * `Makefile` contains the recipe to build our project and flash it also specifies where our files are hidden
 * `compile_command.json` file contains the location of all files for your modern text editor/IDE
 * `README.md` is where you actually are
-* `install_udev.sh` is a script to give acces to the port used in the Step by step
-* `doxygen` and `doxygenConf` are used to generate documentation for the project (cf. Doxygen part for more information)
+* `install_udev.sh` is a script to give access to the port used in the Step by step
+* `doxygen` and `doxygenConf` are used to generate documentation for the project (see Doxygen part for more information)
 * `hal_common` contains the `linker_scrpits` and all `libopencm3` files
 * `lowlevel` contains the code for your peripheral as Clock, GPIOs, Timers with the .h in `lowlevel/include`
 * `mainTest.c` is the main program
 
 # Explanation
-Step by step explanation of the code. At any moment you may refer to the documentation (cf Doxygen part) 
-Only **mainTest.c**, __Motlowlevel/*.c__ and __lowlevel/include/*.h__ will be edited
+Step by step explanation of the code. At any moment you may refer to the documentation (see Doxygen part) 
+Only **mainTest.c**, __lowlevel/*.c__ and __lowlevel/include/*.h__ will be edited
 
 ## Usual Structure
 
@@ -56,47 +56,48 @@ The first function is normally a **setup** used to initialize the peripheral
 ### main
 Including all peripheral .h
 
-In main we start with all **setup and initialisation**
+In main we start with all **setup and initialization**
 
 The the main code that most probably **loop** on itself
 
 ## Clock
-In all libopencm3 project you start with the clock. It is normally a very simple module for the system_clock and implementing delay.
+In all libopencm3 projects you start with the clock. It is normally a very simple module for the system_clock and implementing delay.
 
-Be aware of uC specific **architecture** the function may vary from a uC to another (e. g. F3 to F4)
+Be aware of each μC specific **architecture** the function may vary from a μC to another (e. g. F3 to F4)
 
-In setup it is important to know the **core frequency** of your uC (84 MHz for the STM32F4)
+In setup, it is important to know the **core frequency** of your μC (84 MHz for the STM32F4)
 
-It is almost the **same** for all project. You can probably copy paste it and only change the frequency.
+It is almost the **same** for all projects. You can probably copy paste it and only change the frequency.
 
 ## GPIO
-GPIO are all the input/ output of the uC.
+GPIO are all the input/ output of the μC.
 
-They can be used normaly in 4 possibilities:
+They can be used normally in 4 possible mode:
 * Digital Input
 * Digital Output
-* Analog Pin
 * Alternate Function
+* Analog Pin
 
-They are 3 setup methods for all purposes.
+
+They are 3 setup methods that cover all purposes.
 
 ### Digital I/O
-The simplest one is to use a pin as an digital I/O, the setup is then:
+The simplest one is to use a pin as a digital I/O, the setup is then:
 1. Enable **Clock** on Port (definition as RCC_GPIOX with X the port)
 2. Setup **mode** as an input or output with a pull-up, pull-down or neither
-3. Finally only for **output**, configuartion of the output (gpio output type, gpio pin speed)
+3. Finally, only for **output**, configuration of the output (GPIO output type, GPIO pin speed)
 
 ### Alternate Function
-Pins on a uC are limited therefor multiple fuction are used on any pin, function are for example timer controlled pin, communication pin (uart, spi,etc. )
+Pins on a μC are limited therefor multiple function are used on any pin, function are for example timer controlled pin, communication pin (uart, spi,etc. )
 
-All Information are found in the alternate function mapping in the datasheet (cf Hardware Documentation)
+All Information are found in the alternate function mapping in the datasheet (see Hardware Documentation)
 
-Same setup as Digital I/O with mode af then set **alternate function** to correct af (number in the mapping)
+Same setup as Digital I/O with mode af then set **alternate function** to correct AF (number in the mapping)
 
 ### TODO: Analog Pin Setup
 
 ## Example 1: Blink a LED
-We will use **clock** and **gpio**, if you run in an issue or want to debug the code further see Debug with uart
+We will use **clock** and **GPIO**, if you run in an issue or want to debug the code further see Debug with uart
 
 Example is already done on master branch. On your local branch you can delete lowlevel/gpio.c, lowlevel/led.c, lowlevel/include/gpio.h, lowlevel/include/led.h.
 
@@ -113,7 +114,7 @@ Example is already done on master branch. On your local branch you can delete lo
 
 	1. Parameters are rcc_clken, port, pin, mode
 
-	2. Clock enbale is done via `rcc_periph_clock_enable`
+	2. Clock enable is done via `rcc_periph_clock_enable`
 
 		`rcc_periph_clock_enable(rcc_clken)`
 
@@ -157,7 +158,7 @@ We want to use the onboard LED PA5
 
 		`#define LED_PIN GPIO5`
 
-	3. rcc_clken should be rcc for our port (A)
+	3. rcc_clken should be RCC for our port (A)
 
 		`#define LED_GPIO_RCC RCC_GPIOA`
 
@@ -202,13 +203,13 @@ So there are 3 functions we want in our timer module:
 * Setup/configure output channel
 
 ### Setup Timer
-A STM32F4 as a lot of timer with different possibilities. For illustartion purpose we will use only Timer 1 and 2, because they are the most potent one.
+A STM32F4 as a lot of timer with different possibilities. For illustration purpose we will use only Timer 1 and 2, because they are the most potent one.
 
 The most important parameters for a timer are the **prescaler** and the **period**.
-* The prescaler transforms the clock frequency to a lower frequency easier to aprehend for the user. Most of the time we for example divide the clock to make a 1 us tick
+* The prescaler transforms the clock frequency to a lower frequency easier to apprehend for the user. Most of the time we for example divide the clock to make a 1 us tick
 * The period is then the temporal distance between two equal values
 
-1. As the timer is also a periph we need to enable the **clock**
+1. As the timer is also a peripheral we need to enable the **clock**
 2. Choose a **mode** for your Timer (it will not be explained in details as it is in most case not changed from example 2)
 3. For advanced Timer, you need to allow **breaks**
 4. Set the **prescaler**
@@ -224,21 +225,21 @@ After the setup we need to start the timer.
 2. Enable **counter**
 
 ### Setup Output Channel
-A given Timer as most of the time multiple possible output **channels**. Therefore it is important in the choice of the timer to check the timer but the ouput channel too.
+A given Timer as most of the time multiple possible output **channels**. Therefore it is important in the choice of the timer to check the timer but the output channel too.
 
 The most important parameters for the output channel are its purpose ( **mode** ) and its **value**
-* The mode are defined use in the uC as PWM (cf. timer_set_oc_mode in libopencm3 documentation)
-* The value defines the value of the timer on wich the event takes place
+* The mode are defined use in the μC as PWM  (see timer_set_oc_mode in libopencm3 documentation)
+* The value defines the value of the timer on which the event takes place
 
-We first have to setup the **gpio** in alternate_function mode
+We first have to setup the **GPIO** in alternate_function mode
 
 1. See GPIO for the 4 needed steps
 
-	It is important to check the af number for your chosen timer
+	It is important to check the AF number for your chosen timer
 
-After the gpio is fully setup we can setup the output channel
+After the GPIO is fully setup we can setup the output channel
 
-2. **Disable** the output channel to not generate unforseen event
+2. **Disable** the output channel to not generate unforeseen event
 
 3. Choose the **mode** for your output channel
 
@@ -268,7 +269,7 @@ You can also use gpio from the previous example
 
     1. Parameters are rcc_clken, timer_peripheral, prescaler, period
 
-    2. Clock enbale is done via `rcc_periph_clock_enable`
+    2. Clock enable is done via `rcc_periph_clock_enable`
 
     	`rcc_periph_clock_enable(rcc_clken)`
 
@@ -286,13 +287,13 @@ You can also use gpio from the previous example
 
     6. Set the starting value either as a parameter or 0 via `timer_set_repetition_counter`
 
-    7. Enbale preload via `timer_enable_preload`
+    7. Enable preload via `timer_enable_preload`
 
-    8. We choose to count in countinous mode via `timer_continuous_mode`
+    8. We choose to count in continuous mode via `timer_continuous_mode`
 
     9. Set period via `timer_set_period`
 
-4. Then we need a start timer fucntion `_timer_start`
+4. Then we need a start timer function `_timer_start`
 
     1. Generate the update event via `timer_generate_event(timer_peripheral, TIM_EGR_UG)`
         * *TIM_EGR_UG* is the update event
@@ -332,7 +333,7 @@ You can also use gpio from the previous example
 
 	`touch lowlevel/include/pwm.h`
 
-We want to setup the pwm and have an user function to change the pulse width
+We want to setup the PWM and have an user function to change the pulse width
 
 8. Prototypes in `pwm.h`
 
@@ -378,7 +379,7 @@ We want to make a PWM and gladly there are already PWM mode on STM32F4: *TIM_OCM
 
 12. Write a program
 
-    Varying the pulsewidth in time
+    Varying the pulse width in time
 
     ```
     pwm_setup();
@@ -409,11 +410,11 @@ To clean: `make clean`
 You can access the documentation generated from the code with doxygen (see the doxygen paragraph to generate it) in the doxygen/html or latex.
 
 ## Hardware documentation
-Microcontroller used: STM32F401RE on a Nulceo-64 board, main doc:
+μC used: STM32F401RE on a Nucleo-64 board, main doc:
 * [Reference Manual STM32F401 line, doc RM0368, 847 pages](https://www.st.com/resource/en/reference_manual/dm00096844-stm32f401xbc-and-stm32f401xde-advanced-armbased-32bit-mcus-stmicroelectronics.pdf)
 * [STM32F401xD/xE datasheet, 135 pages](https://www.st.com/resource/en/datasheet/stm32f401re.pdf)
     * Alternate function mapping, p45, table 9
-* [Reference STM Nuleo-64 Board, doc UM1724, 69 pages](https://www.st.com/resource/en/user_manual/dm00105823-stm32-nucleo64-boards-mb1136-stmicroelectronics.pdf)
+* [Reference STM Nucleo-64 Board, doc UM1724, 69 pages](https://www.st.com/resource/en/user_manual/dm00105823-stm32-nucleo64-boards-mb1136-stmicroelectronics.pdf)
 
 ## Doxygen
 
@@ -466,6 +467,6 @@ Note: You must have a latex distribution on your computer that has `pdflatex` co
     * detail the function in .c files
 
 * We envision three levels for the code :
-    * lowlevel fuctions that must be as general as possible to setup the hardware config (ex: timer fuctions)
-    * lowlevel modules with the functions called by the user (ex: motor module, with setup and speed/dir fuctions)
+    * lowlevel functions that must be as general as possible to setup the hardware config (ex: timer functions)
+    * lowlevel modules with the functions called by the user (ex: motor module, with setup and speed/dir functions)
     * rolling unit level (ex: control engineering)
