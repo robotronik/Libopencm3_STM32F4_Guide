@@ -3,10 +3,12 @@
 #include "gpio.h"
 #include "led.h"
 #include "pwm.h"
+#include "exti.h"
 
 void test_led(uint32_t delay);
 void test_pwm();
 void test_uart();
+void test_exti();
 
 int main() {
     //setup
@@ -14,8 +16,9 @@ int main() {
     
 	//Choose one and only one test
 	//test_led(100);
-	test_pwm();
+	//test_pwm();
 	//test_uart();
+	test_exti();
 }
 
 void test_led(uint32_t delay){
@@ -38,12 +41,26 @@ void test_pwm(){
         delay_ms(100);
     }
 }
+
 void test_uart(){
 	uart_setup();
 
-	fprintf(stderr,"Test message on DEBUG uart");
+	fprintf(stderr,"Test message on DEBUG uart\n");
 
 	while(1);
 }
 
+void test_exti(){
+    uart_setup();
+    led_setup();
+    gpio_toggle(LED_PORT, LED_PIN);
+    button_switch_init();
+
+    while(1){
+        if(!gpio_get(BUTTON_PORT,BUTTON_PIN)){
+            fprintf(stderr,"j'appuie sur le bouton\n");
+        }
+        delay_ms(500);
+    }
+}
 
