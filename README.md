@@ -397,7 +397,6 @@ We want to make a PWM and gladly there are already PWM mode on STM32F4: *TIM_OCM
 
 **Bonus**: Using a timer enables to do anything in the main parallel to the timer. We can for example imagine a modification to example 1 using a timer so we can execute code while the LED is blinking.
 
-
 # usual README of our repositories
 
 Reminder: To clone the submodule in the same time, use `git clone --recurse-submodules`, then don't forget to build libopencm3. You need to execute `make install_udev` one time to add the permission to flash.
