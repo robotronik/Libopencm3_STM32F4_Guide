@@ -321,7 +321,7 @@ You can also use gpio from the previous example
     
     in `_gpio_setup_pin` change `gpio_mode_setup` to this:
 
-    `gpio_mode_setup(gpio_port,**GPIO_MODE_AF**,GPIO_PUPD_NONE,gpio_pin)`
+    `gpio_mode_setup(gpio_port,` **GPIO_MODE_AF** `,GPIO_PUPD_NONE,gpio_pin)`
 
     and add `gpio_set_af` with the new parameter gpio_altfun
 
