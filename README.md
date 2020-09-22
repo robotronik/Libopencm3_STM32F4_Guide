@@ -88,18 +88,18 @@ The simplest one is to use a pin as a digital I/O, the setup is then:
 3. Finally, only for **output**, configuration of the output (GPIO output type, GPIO pin speed)
 
 ### Alternate Function
-Pins on a μC are limited therefor multiple function are used on any pin, function are for example timer controlled pin, communication pin (uart, spi,etc. )
+Pins on a μC are limited therefor multiple function are used on any pin, the function are for example timer controlled pin, communication pin (uart, spi, etc.)
 
 All Information are found in the alternate function mapping in the datasheet (see Hardware Documentation)
 
-Same setup as Digital I/O with mode af then set **alternate function** to correct AF (number in the mapping)
+Same setup as Digital I/O with the mode AF then set **alternate function** to correct AF (number in the mapping)
 
 ### TODO: Analog Pin Setup
 
 ## Example 1: Blink a LED
-We will use **clock** and **GPIO**, if you run in an issue or want to debug the code further see Debug with uart
+We will use **clock** and **GPIO**, if you run into an issue or want to debug the code further see Debug with uart
 
-Example is already done on master branch. On your local branch you can delete lowlevel/gpio.c, lowlevel/led.c, lowlevel/include/gpio.h, lowlevel/include/led.h.
+Example is already done on the master branch. On your local branch you can delete lowlevel/gpio.c, lowlevel/led.c, lowlevel/include/gpio.h, lowlevel/include/led.h.
 
 1. Let's setup the clock in main
 2. Create or Edit gpio.h and gpio.c
@@ -170,7 +170,7 @@ We want to use the onboard LED PA5
 
 8. Write `led_blink` using libopencm3
 
-	In libopencm3 operation on digital I/O are clear, set, toggle, get.
+	In libopencm3 operation on digital I/O are: clear, set, toggle, get.
 
 	We want to toggle LED state by calling the function
 
@@ -195,7 +195,7 @@ We want to use the onboard LED PA5
 
 A **timer** is a sequential circuit that **counts** by increasing or decreasing a register. It **resets** and **generates a event**, often used as an **interrupt**, when said register exceeds or falls behind a **predefined value**.
 
-We can then use said **event** to control a pin (output channel) as an **alternate function**.
+We can then use said **event** to control an output channel (for example a pin as an **alternate function**).
 
 So there are 3 functions we want in our timer module:
 * Setup/configure timer
@@ -203,14 +203,14 @@ So there are 3 functions we want in our timer module:
 * Setup/configure output channel
 
 ### Setup Timer
-A STM32F4 as a lot of timer with different possibilities. For illustration purpose we will use only Timer 1 and 2, because they are the most potent one.
+A STM32F4 as a lot of timer with different possibilities. For illustration purpose we will only use Timer 1 and 2, because they are the most potent one.
 
 The most important parameters for a timer are the **prescaler** and the **period**.
 * The prescaler transforms the clock frequency to a lower frequency easier to apprehend for the user. Most of the time we for example divide the clock to make a 1 us tick
 * The period is then the temporal distance between two equal values
 
 1. As the timer is also a peripheral we need to enable the **clock**
-2. Choose a **mode** for your Timer (it will not be explained in details as it is in most case not changed from example 2)
+2. Choose a **mode** for the Timer (it will not be explained in details as it is in most case not changed from example 2)
 3. For advanced Timer, you need to allow **breaks**
 4. Set the **prescaler**
 5. Choose the **starting value**
@@ -225,7 +225,7 @@ After the setup we need to start the timer.
 2. Enable **counter**
 
 ### Setup Output Channel
-A given Timer as most of the time multiple possible output **channels**. Therefore it is important in the choice of the timer to check the timer but the output channel too.
+A given Timer as most of the time multiple possible output **channels**. Therefore it is important in the choice of the timer to check the timer, but the output channel too.
 
 The most important parameters for the output channel are its purpose ( **mode** ) and its **value**
 * The mode are defined use in the μC as PWM  (see timer_set_oc_mode in libopencm3 documentation)
@@ -277,7 +277,7 @@ You can also use gpio from the previous example
 
         `timer_set_mode(timer_peripheral, TIM_CR1_CKD_CK_INT, TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP)`
 
-        * *TIM_CR1_CKD_CK_INT* means no division ratio for the clock
+        * *TIM_CR1_CKD_CK_INT* means no division ratio for the prescaled timer
         * *TIM_CR1_CMS_EDGE* means aligned on edge
         * *TIM_CR1_DIR_UP* means the timer is counting up
 
@@ -321,7 +321,7 @@ You can also use gpio from the previous example
     
     in `_gpio_setup_pin` change `gpio_mode_setup` to this:
 
-    `gpio_mode_setup(gpio_port,GPIO_MODE_AF,GPIO_PUPD_NONE,gpio_pin)`
+    `gpio_mode_setup(gpio_port,**GPIO_MODE_AF**,GPIO_PUPD_NONE,gpio_pin)`
 
     and add `gpio_set_af` with the new parameter gpio_altfun
 
@@ -394,6 +394,9 @@ We want to make a PWM and gladly there are already PWM mode on STM32F4: *TIM_OCM
     ```
 
 13. **Party Harder**
+
+Bonus: Using a timer enables to do anything in the main parallel to the timer. We can for example imagine a modification to example 1 using a timer so we can execute code while the LED is blinking.
+
 
 # usual README of our repositories
 
