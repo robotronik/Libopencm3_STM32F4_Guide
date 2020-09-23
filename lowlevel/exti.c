@@ -25,7 +25,6 @@ void _limit_switch_init(uint32_t exti,uint32_t gpio_port,uint8_t interrupt_numbe
     //hey there is an interrupt now you must go there to see which code to 
     //execute)
     nvic_enable_irq(interrupt_number);
-    nvic_set_priority(interrupt_number, 1);
 
     //plug the exti with the right gpio port
     exti_select_source(exti,gpio_port);
@@ -33,7 +32,7 @@ void _limit_switch_init(uint32_t exti,uint32_t gpio_port,uint8_t interrupt_numbe
     //choose the type of event that will trigger the exti
     exti_set_trigger(exti,trig);
     
-    //ajout selon Benoit
+    //TODO commentaire a ecrire
     exti_enable_request(exti);
 
 }
@@ -52,6 +51,9 @@ void button_switch_init(){
     //we plug the EXTI peripheral with our gpio
     _limit_switch_init(BUTTON_EXTI,BUTTON_PORT,BUTTON_NVIC_INTERRUPT_NUMBER,
             EXTI_TRIGGER_FALLING);
+
+    //Chosen priority for the exti
+    nvic_set_priority(BUTTON_NVIC_INTERRUPT_NUMBER, 1);
 }
 
 
