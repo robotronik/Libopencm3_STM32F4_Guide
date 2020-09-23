@@ -53,3 +53,9 @@ void _limit_switch_init(uint32_t exti,uint32_t gpio_port,uint8_t interrupt_numbe
  * F401RE (ie PC13)
  */
 void button_switch_init();
+
+/**
+ * @brief this function initializes the SYSCFG clock, this peripheral handles
+ * the exti line
+ */
+void exti_setup();
