@@ -1,15 +1,15 @@
 /**
  * @file
- * 
+ *
  * This file is part of STM32F401REGuide
- * 
+ *
  * @brief This function implements external interrupts coming from the blue
  * button PC13
  *
- * @date  09/2020  
- * 
+ * @date  09/2020
+ *
  * Licence :
- * 
+ *
  * Robotronik Phelma
  * @author NPXav Benano Trukbidule
 */
@@ -22,7 +22,7 @@ void _limit_switch_init(uint32_t exti,uint32_t gpio_port,uint8_t interrupt_numbe
     rcc_periph_clock_enable(RCC_SYSCFG);
 
     //enable the entry in the vector table of interruption (this table says
-    //hey there is an interrupt now you must go there to see which code to 
+    //hey there is an interrupt now you must go there to see which code to
     //execute)
     nvic_enable_irq(interrupt_number);
 
@@ -31,7 +31,7 @@ void _limit_switch_init(uint32_t exti,uint32_t gpio_port,uint8_t interrupt_numbe
 
     //choose the type of event that will trigger the exti
     exti_set_trigger(exti,trig);
-    
+
     //TODO commentaire a ecrire
     exti_enable_request(exti);
 
@@ -47,13 +47,13 @@ void button_switch_init(){
     rcc_periph_clock_enable(BUTTON_RCC);
 	/* Setup pin as input or output and no pull up or pull down */
     gpio_mode_setup(BUTTON_PORT,GPIO_MODE_INPUT,GPIO_PUPD_PULLUP,BUTTON_PIN);
-    
+
     //we plug the EXTI peripheral with our gpio
     _limit_switch_init(BUTTON_EXTI,BUTTON_PORT,BUTTON_NVIC_INTERRUPT_NUMBER,
             EXTI_TRIGGER_FALLING);
 
     //Chosen priority for the exti
-    nvic_set_priority(BUTTON_NVIC_INTERRUPT_NUMBER, 1);
+    nvic_set_priority(BUTTON_NVIC_INTERRUPT_NUMBER, BUTTON_PRIORITY);
 }
 
 
@@ -67,10 +67,9 @@ void exti15_10_isr(){
         //sweet debug message
         fprintf(stderr,"interrupt from the blue button yay !\n");
 
-        //when we leave, we have to lower the flag to tell the uC that yes we 
+        //when we leave, we have to lower the flag to tell the uC that yes we
         //managed the interruption it is safe to go on or else the uC will reenter
-        //the interruption right after leaving it => what an ugly loop! 
+        //the interruption right after leaving it => what an ugly loop!
         exti_reset_request(BUTTON_EXTI);
     }
 }
-

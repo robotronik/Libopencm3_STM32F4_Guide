@@ -1,15 +1,15 @@
 /**
  * @file
- * 
+ *
  * This file is part of STM32F401REGuide
- * 
+ *
  * @brief This function implements external interrupts coming from the blue
  * button PC13
  *
- * @date  09/2020  
- * 
+ * @date  09/2020
+ *
  * Licence :
- * 
+ *
  * Robotronik Phelma
  * @author NPXav Benano Trukbidule
 */
@@ -29,6 +29,8 @@
 #define BUTTON_PIN     GPIO13
 #define BUTTON_NVIC_INTERRUPT_NUMBER   	NVIC_EXTI15_10_IRQ
 #define BUTTON_EXTI    EXTI13
+
+#define BUTTON_PRIORITY 1
 
 
 
@@ -51,4 +53,3 @@ void _limit_switch_init(uint32_t exti,uint32_t gpio_port,uint8_t interrupt_numbe
  * F401RE (ie PC13)
  */
 void button_switch_init();
-
