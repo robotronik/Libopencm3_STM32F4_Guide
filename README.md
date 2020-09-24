@@ -153,7 +153,9 @@ int main() {
 
 	4. If we want to setup an output, we need to configure output via `gpio_set_output_options`
 
-	    * Look at the libopencm3 f4 for the mode
+	    * In the documentation we find a definition of possible mode: *GPIO_MODE_INPUT*, *GPIO_MODE_OUTPUT*, *GPIO_MODE_AF*, *GPIO_MODE_ANALOG*
+
+	    * We want to check for an output and then setup output
 
 		`gpio_set_output_options(port, GPIO_OTYPE_PP,GPIO_OSPEED_50MHZ, pin)`
 
@@ -165,11 +167,17 @@ int main() {
 
 	`touch lowlevel/led.c`
 
+	`touch lowlevel/include/led.h`
+
 
 
 We want to setup the led and have an user function to blink it
 
-5. Prototypes in `led.h`
+5. We will use all we wrote in `gpio` so we have to include it
+
+    `#include "gpio.h"`
+
+6. Prototypes in `led.h`
 
 	`void led_setup()`
 
@@ -177,7 +185,7 @@ We want to setup the led and have an user function to blink it
 
 We want to use the onboard LED PA5
 
-6. Definitions
+7. Definitions
 
 	1. port is A 
 
@@ -187,17 +195,17 @@ We want to use the onboard LED PA5
 
 		`#define LED_PIN GPIO5`
 
-	3. rcc_clken should be RCC for our port (A)
+	3. clken should be RCC for our port (A)
 
 		`#define LED_GPIO_RCC RCC_GPIOA`
 
-7. Write `led_setup` using `_gpio_setup_pin`
+8. Write `led_setup` in `led.c` using `_gpio_setup_pin`
 
 	PA5 should be an output to control LED
 
 	`_gpio_setup_pin(LED_GPIO_RCC, LED_PORT, LED_PIN, GPIO_MODE_OUTPUT)`
 
-8. Write `led_blink` using libopencm3
+9. Write `led_blink` using libopencm3
 
 	In libopencm3 operation on digital I/O are: clear, set, toggle, get.
 
@@ -205,7 +213,7 @@ We want to use the onboard LED PA5
 
 	`gpio_toggle(LED_PORT, LED_PIN)`
 	 
-9. Write a program
+10. Write a program in main (`mainTest.c`)
 
 	For example a blinking led at a given frequency/delay
 
@@ -214,11 +222,11 @@ We want to use the onboard LED PA5
 
 	while(1){
 	      led_blink();
-	      delay_ms(delay);
+	      delay_ms(1000);
 	}
 	```
 
-10. **Party**
+11. **Party**
 
 ## Timers
 
