@@ -114,7 +114,6 @@ You also need to empty the mainTest.c file. Please replace the content to:
 ```
 #include "clock.h"
 #include "uart.h"
-#include "gpio.h"
 #include "led.h"
 
 int main() {
@@ -298,8 +297,7 @@ You also need to empty the mainTest.c file. Please replace the content to:
 ```
 #include "clock.h"
 #include "uart.h"
-#include "gpio.h"
-#include "timer.h"
+#include "led.h"
 #include "pwm.h"
 
 int main() {
@@ -381,7 +379,7 @@ int main() {
     
     in `_gpio_setup_pin_af` copy `_gpio_setup_pin` but change `gpio_mode_setup` to this:
 
-    `gpio_mode_setup(gpio_port,` **GPIO_MODE_AF** `,GPIO_PUPD_NONE,gpio_pin)`
+    `gpio_mode_setup(gpio_port,GPIO_MODE_AF,GPIO_PUPD_NONE,gpio_pin)`
 
     and at the end add `gpio_set_af` with the new parameter gpio_altfun
 
@@ -394,6 +392,8 @@ int main() {
 	`touch lowlevel/include/pwm.h`
 
 We want to setup the PWM and have an user function to change the pulse width
+
+Reminder: we use `gpio` and `timer` in `pwm` so include it
 
 8. Prototypes in `pwm.h`
 
@@ -424,20 +424,31 @@ We want to make a PWM and gladly there are already PWM mode on STM32F4: *TIM_OCM
     #define PWM_OC_MODE     TIM_OCM_PWM1
     ```
 
-10. Write `pwm_setup` using `gpio` and `timer`
+10. Write `pwm_setup` in `pwm.c` using `gpio` and `timer`
 
-    ```
-    _timer_setup(PWM_TIM_RCC, PWM_TIM, PWM_PRESCALE, PWM_PERIOD);
-    _gpio_setup_pin_af(PWM_GPIO_RCC_EN, PWM_PORT_EN, PWM_PIN_EN, PWM_AF);
-    _timer_setup_output_c(PWM_TIM, PWM_OC_ID, PWM_OC_MODE, 0);
-    _timer_start(PWM_TIM);
-    ```
+    Reminder: include your header in .c file and copy prototypes
+
+    1. Setup the timer
+    
+        `_timer_setup(PWM_TIM_RCC, PWM_TIM, PWM_PRESCALE, PWM_PERIOD)`
+
+    2. Setup the output pin
+    
+        `_gpio_setup_pin_af(PWM_GPIO_RCC_EN, PWM_PORT_EN, PWM_PIN_EN, PWM_AF)`
+
+    3. Setup the output channel with a default value of 0
+    
+        `_timer_setup_output_c(PWM_TIM, PWM_OC_ID, PWM_OC_MODE, 0)`
+
+    4. Start the timer
+
+        `_timer_start(PWM_TIM)`
 
 11. Write `pwm_set_pulse_width` changing the oc_value
 
     `timer_set_oc_value(PWM_TIM, PWM_OC_ID, pulse_width)`
 
-12. Write a program
+12. Write a program in main
 
     Varying the pulse width in time
 
@@ -449,13 +460,14 @@ We want to make a PWM and gladly there are already PWM mode on STM32F4: *TIM_OCM
     while (1) {
         pw = (pw+100)%20000;
         pwm_set_pulse_width(pw);
-        delay_ms(100);
+        delay_ms(50);
     }
     ```
+    Check the result on an oscilloscope looking at pin PA10 (D2)
 
 13. **Party Harder**
 
-**Bonus**: Using a timer enables to do anything in the main parallel to the timer. We can for example imagine a modification to example 1 using a timer so we can execute code while the LED is blinking.
+**Bonus**: Using a timer enables to do anything in the main, parallel to the timer. We can for example imagine a modification of example 1 using a timer so we can execute code while the LED is blinking.
 
 # Exemple 3: Generate an interrupt from a GPIO output thanks to the EXTI perpipheral
 

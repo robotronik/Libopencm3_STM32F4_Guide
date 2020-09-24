@@ -14,7 +14,6 @@
 */
 
 #pragma once
-#include <libopencm3/stm32/timer.h>
 
 #include "timer.h"
 #include "gpio.h"
