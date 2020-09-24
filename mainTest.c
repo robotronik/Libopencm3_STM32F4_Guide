@@ -15,10 +15,10 @@ int main() {
     clock_setup();
     exti_setup();    
 	//Choose one and only one test
-	//test_led(100);
+	test_led(100);
 	//test_pwm();
 	//test_uart();
-	test_exti();
+	//test_exti();
 }
 
 void test_led(uint32_t delay){

@@ -140,11 +140,11 @@ int main() {
     
 	in `gpio.c` we edit `_gpio_setup_pin`:
 
-	1. Parameters are clken, port, pin, mode
+	1. Parameters are rcc_clken, port, pin, mode
 
 	2. Clock enable is done via `rcc_periph_clock_enable`
 
-		`rcc_periph_clock_enable(clken)`
+		`rcc_periph_clock_enable(rcc_clken)`
 
 	3. Setup mode via `gpio_mode_setup`
 
@@ -321,6 +321,8 @@ int main() {
 
 3. For Timer we first need a setup function `_timer_setup`
 
+    Reminder: include your header in .c file and copy prototypes
+
     in `timer.c` in  `_timer_setup`:
 
     1. Parameters are rcc_clken, timer_peripheral, prescaler, period
@@ -336,6 +338,8 @@ int main() {
         * *TIM_CR1_CKD_CK_INT* means no division ratio for the prescaled timer
         * *TIM_CR1_CMS_EDGE* means aligned on edge
         * *TIM_CR1_DIR_UP* means the timer is counting up
+
+    Following command are really easy to use with the documentation, do it yourself
 
     4. For advanced timer, enable break via `timer_enable_break_main_output`
 
@@ -359,7 +363,7 @@ int main() {
 5. Function to setup output channel `_timer_setup_output_c`
     They can be multiple channel active for one timer so this function could be called more than one time per timer
 
-    OC_id, OC_mode, OC_value are specific to the function of your timer 
+    oc_id, oc_mode, oc_value are specific to the function of your timer 
 
     Because we are using a pin we need to disable it first and enable it afterward
 
@@ -375,11 +379,11 @@ int main() {
 
 6. Add a function to `gpio` to setup alternate function
     
-    in `_gpio_setup_pin` change `gpio_mode_setup` to this:
+    in `_gpio_setup_pin_af` copy `_gpio_setup_pin` but change `gpio_mode_setup` to this:
 
     `gpio_mode_setup(gpio_port,` **GPIO_MODE_AF** `,GPIO_PUPD_NONE,gpio_pin)`
 
-    and add `gpio_set_af` with the new parameter gpio_altfun
+    and at the end add `gpio_set_af` with the new parameter gpio_altfun
 
     `gpio_set_af(gpio_port, gpio_altfun, gpio_pin)`
 
