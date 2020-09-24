@@ -109,6 +109,7 @@ We will use **clock** and **GPIO**, if you run into an issue or want to debug th
 
 Example is already done on the master branch. On your local branch you can delete lowlevel/gpio.c, lowlevel/led.c, lowlevel/include/led.h.
 `rm lowlevel/gpio.c lowlevel/led.c lowlevel/include/led.h`
+
 You also need to empty the mainTest.c file. Please replace the content to:
 ```
 #include "clock.h"
@@ -289,20 +290,38 @@ After the GPIO is fully setup we can setup the output channel
 ## Example 2: Generate a PWM signal with a given pulse width on pin
 We will use **clock**, **gpio** and **timer**, if you run in an issue or want to debug the code further see Debug with uart
 
-Example is already done on master branch. On your local branch you can delete lowlevel/timer.c, lowlevel/pwm.c, lowlevel/include/timer.h, lowlevel/include/timer.h.
+Example is already done on master branch. On your local branch you can delete lowlevel/timer.c, lowlevel/pwm.c, lowlevel/include/pwm.h.
 You can also use gpio from the previous example
+`rm lowlevel/timer.c lowlevel/pwm.c lowlevel/include/pwm.h`
+
+You also need to empty the mainTest.c file. Please replace the content to:
+```
+#include "clock.h"
+#include "uart.h"
+#include "gpio.h"
+#include "timer.h"
+#include "pwm.h"
+
+int main() {
+    //setup
+    clock_setup();
+
+    //Your code here    
+    
+}
+```
 
 1. Let's setup the clock in main
 
-2. Create or Edit timer.h and timer.c
+    `clock_setup()`
+
+2. Create or Edit timer.c
 
 	`touch lowlevel/timer.c`
 
-	`touch lowlevel/include/timer.h`
-
 3. For Timer we first need a setup function `_timer_setup`
 
-    in `_timer_setup`:
+    in `timer.c` in  `_timer_setup`:
 
     1. Parameters are rcc_clken, timer_peripheral, prescaler, period
 
@@ -510,8 +529,8 @@ Note: You must have a latex distribution on your computer that has `pdflatex` co
 --> install picocom
 --> find your card `ls /dev` . It should be /dev/ttyACM0
 --> run picocom with `picocom -b 9600 /dev/ttyACM0`
---> in main setup uart
---> in code use fprintf(stderr,message) to debug
+--> in main setup uart (`uart_setp()`)
+--> in code use `fprintf(stderr,message)` to debug
 
 ## Coding style
 

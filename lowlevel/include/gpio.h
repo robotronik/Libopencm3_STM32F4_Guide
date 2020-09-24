@@ -39,5 +39,5 @@ void _gpio_setup_pin_af(enum rcc_periph_clken rcc_clken, uint32_t gpio_port,
  * @param pin       the pint to enable
  * @param mode      the mode of your GPIO (GPIO_MODE_INPUT,GPIO_MODE_OUTPUT)
  */
-void _gpio_setup_pin(enum rcc_periph_clken clken, uint32_t port,uint16_t pin,
+void _gpio_setup_pin(enum rcc_periph_clken rcc_clken, uint32_t port,uint16_t pin,
         uint8_t mode);

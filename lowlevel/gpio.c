@@ -15,7 +15,7 @@ void _gpio_setup_pin_af(enum rcc_periph_clken rcc_clken, uint32_t gpio_port,
 	gpio_set_af(gpio_port, gpio_altfun, gpio_pin);
 }
 
-void _gpio_setup_pin(enum rcc_periph_clken clken, uint32_t port,uint16_t pin,
+void _gpio_setup_pin(enum rcc_periph_clken rcc_clken, uint32_t port,uint16_t pin,
         uint8_t mode){
     /* Enable clock on port*/
     rcc_periph_clock_enable(clken);
