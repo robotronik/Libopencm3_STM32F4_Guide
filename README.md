@@ -4,6 +4,7 @@ How to flash and write a program on a nucleo F401RE using libopencm3
 # Step by step !
 
 1. Install git and clone this repository (see git conference/tutorial)
+    * You need a ssh key on your account to clone libopencm3
     * `git clone --recurse-submodules URL_OF_THE_REPO`
     * We will now assume your working directory is this folder ! (`cd` into it please)
 2. Install the necessary tools to cross compile and flash your code
@@ -11,7 +12,7 @@ How to flash and write a program on a nucleo F401RE using libopencm3
 3. We now have to build the library that reads and writes in the STM registers for us : libopencm3!
     * `cd hal_common/libopencm3`
     * `make`
-    * `cd ../..`
+    * `cd -`
 5. Give yourself the rights to access the port to talk to the card
     * `make install_udev`
 6. Now we can build and flash the program with a simple:
@@ -33,7 +34,12 @@ Gives you some hints about what file does what to know where to start your explo
 
 # Explanation
 Step by step explanation of the code. At any moment you may refer to the documentation (see Doxygen part) 
+
 Only **mainTest.c**, __lowlevel/*.c__ and __lowlevel/include/*.h__ will be edited
+
+For all example it is necessary to use the libopencm3 f4 documentation (I recommend to look up every function used to become Familiar with the definition and parameters in libopencm3)
+
+[Documentation libopencm3 STM32F4](http://libopencm3.org/docs/latest/stm32f4/html/modules.html)
 
 ## Usual Structure
 
@@ -69,6 +75,8 @@ In setup, it is important to know the **core frequency** of your μC (84 MHz for
 
 It is almost the **same** for all projects. You can probably copy paste it and only change the frequency.
 
+It implements all temporal functions of the uC and as to be setup first and enabled for all needed peripheral. We also implement a delay for the uC.
+
 ## GPIO
 GPIO are all the input/ output of the μC.
 
@@ -99,23 +107,43 @@ Same setup as Digital I/O with the mode AF then set **alternate function** to co
 ## Example 1: Blink a LED
 We will use **clock** and **GPIO**, if you run into an issue or want to debug the code further see Debug with uart
 
-Example is already done on the master branch. On your local branch you can delete lowlevel/gpio.c, lowlevel/led.c.
-`rm lowlevel/gpio.c lowlevel/led.c`
+Example is already done on the master branch. On your local branch you can delete lowlevel/gpio.c, lowlevel/led.c, lowlevel/include/led.h.
+`rm lowlevel/gpio.c lowlevel/led.c lowlevel/include/led.h`
+You also need to empty the mainTest.c file. Please replace the content to:
+```
+#include "clock.h"
+#include "uart.h"
+#include "gpio.h"
+#include "led.h"
+
+int main() {
+    //setup
+    clock_setup();
+
+    //Your code here    
+    
+}
+```
 
 1. Let's setup the clock in main
-2. Create or Edit gpio.h and gpio.c
+
+    `clock_setup()`
+    
+2. Create or Edit gpio.c
 
 	`touch lowlevel/gpio.c`
-	
+
 3. For GPIO we only need a setup function `_gpio_setup_pin`
 
+    * Include `gpio.h` in `gpio.c` and copy your prototypes
+    
 	in `gpio.c` we edit `_gpio_setup_pin`:
 
-	1. Parameters are rcc_clken, port, pin, mode
+	1. Parameters are clken, port, pin, mode
 
 	2. Clock enable is done via `rcc_periph_clock_enable`
 
-		`rcc_periph_clock_enable(rcc_clken)`
+		`rcc_periph_clock_enable(clken)`
 
 	3. Setup mode via `gpio_mode_setup`
 
@@ -403,7 +431,7 @@ We want to make a PWM and gladly there are already PWM mode on STM32F4: *TIM_OCM
 1. You first need to enable the clock SYSCFG which will handle the EXTI(for
 external interrupt). The idea is that your GPIO input will change state and
 when this change happens it will raise a flag that is a signal for the CPU
-to say hey something happeed there. And that is the EXTI peripheral that handles
+to say hey something happened there. And that is the EXTI peripheral that handles
 this signal. We have to link the exti line with our GPIO.
 * Write `exti_setup` (use `rcc_periph_clock_enable`)
 
