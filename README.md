@@ -58,7 +58,7 @@ Including all peripheral .h
 
 In main we start with all **setup and initialization**
 
-The the main code that most probably **loop** on itself
+The main code that most probably **loop** on itself
 
 ## Clock
 In all libopencm3 projects you start with the clock. It is normally a very simple module for the system_clock and implementing delay.
@@ -99,18 +99,17 @@ Same setup as Digital I/O with the mode AF then set **alternate function** to co
 ## Example 1: Blink a LED
 We will use **clock** and **GPIO**, if you run into an issue or want to debug the code further see Debug with uart
 
-Example is already done on the master branch. On your local branch you can delete lowlevel/gpio.c, lowlevel/led.c, lowlevel/include/gpio.h, lowlevel/include/led.h.
+Example is already done on the master branch. On your local branch you can delete lowlevel/gpio.c, lowlevel/led.c.
+`rm lowlevel/gpio.c lowlevel/led.c`
 
 1. Let's setup the clock in main
 2. Create or Edit gpio.h and gpio.c
 
 	`touch lowlevel/gpio.c`
-
-	`touch lowlevel/include/gpio.h`
 	
 3. For GPIO we only need a setup function `_gpio_setup_pin`
 
-	in `_gpio_setup_pin`:
+	in `gpio.c` we edit `_gpio_setup_pin`:
 
 	1. Parameters are rcc_clken, port, pin, mode
 
@@ -126,6 +125,8 @@ Example is already done on the master branch. On your local branch you can delet
 
 	4. If we want to setup an output, we need to configure output via `gpio_set_output_options`
 
+	    * Look at the libopencm3 f4 for the mode
+
 		`gpio_set_output_options(port, GPIO_OTYPE_PP,GPIO_OSPEED_50MHZ, pin)`
 
 		* Type is push-pull or open drain, we normally use *GPIO_OTYPE_PP* 
@@ -136,7 +137,7 @@ Example is already done on the master branch. On your local branch you can delet
 
 	`touch lowlevel/led.c`
 
-	`touch lowlevel/include/led.h`
+
 
 We want to setup the led and have an user function to blink it
 
