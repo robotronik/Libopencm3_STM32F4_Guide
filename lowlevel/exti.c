@@ -14,26 +14,28 @@
  * @author NPXav Benano Trukbidule
 */
 #include "exti.h"
-
+void exti_setup(){
+    rcc_periph_clock_enable(RCC_SYSCFG);
+}
 void _limit_switch_init(uint32_t exti,uint32_t gpio_port,uint8_t interrupt_number,
         enum exti_trigger_type trig){
+    //disable requests during setup to avoid false activation
     exti_disable_request(exti);
 
-    rcc_periph_clock_enable(RCC_SYSCFG);
 
+        //plug the exti with the right gpio port
+    exti_select_source(exti,gpio_port);
+
+    //choose the type of event that will trigger the exti
+    exti_set_trigger(exti,trig);
+    
+    //enable the interruption comig from the exti line specified as a parameter
+    exti_enable_request(exti);
     //enable the entry in the vector table of interruption (this table says
     //hey there is an interrupt now you must go there to see which code to
     //execute)
     nvic_enable_irq(interrupt_number);
 
-    //plug the exti with the right gpio port
-    exti_select_source(exti,gpio_port);
-
-    //choose the type of event that will trigger the exti
-    exti_set_trigger(exti,trig);
-
-    //TODO commentaire a ecrire
-    exti_enable_request(exti);
 
 }
 

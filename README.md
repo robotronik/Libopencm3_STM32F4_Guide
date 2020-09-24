@@ -398,6 +398,39 @@ We want to make a PWM and gladly there are already PWM mode on STM32F4: *TIM_OCM
 
 **Bonus**: Using a timer enables to do anything in the main parallel to the timer. We can for example imagine a modification to example 1 using a timer so we can execute code while the LED is blinking.
 
+# Exemple 3: Generate an interrupt from a GPIO output thanks to the EXTI perpipheral
+
+1. You first need to enable the clock SYSCFG which will handle the EXTI(for
+external interrupt). The idea is that your GPIO input will change state and
+when this change happens it will raise a flag that is a signal for the CPU
+to say hey something happeed there. And that is the EXTI peripheral that handles
+this signal. We have to link the exti line with our GPIO.
+* Write `exti_setup` (use `rcc_periph_clock_enable`)
+
+2. The function `_limit_switch_init` will be our universal function to 
+initialize limit switches (or any exti interrupt from GPIO).
+* Disable requests to avoid false activation during setup with 
+`exti_disable_request`
+* Select which GPIO port will connect to exti number something. All pins of the
+same number are multiplexed into one exti so for exemple GPIO A1;B1;C1 all
+all connect to EXTI_1 `exti_select_source`
+* Now we can choose which type of event on the exti line will actually raise the
+flag to notify an event happened, it could be a rising edge, a falling one or 
+maybe we want both to trigger the flag. `exti_set_trigger`
+
+* Now we have to enable the EXTI interrupt `exti_enable_request` and enable the entry that will point
+and tell the µC what code (the interrupt routine= a function) should be executed
+when it sees the risen flag(this information is contained in the NVIC for
+nested vector interrupt control) `nvic_enable_irq`.
+
+3. We will now write a function to initialize the interrupts coming from the
+blue button (on PC13). It is the function `button_switch_init`
+We have to initialize the GPIO as an input as we did before.
+* Start the clock of the port `rcc_periph_clock_enable`
+* Setup the port as input `gpio_mode_setup`
+* Use `_limit_switch_init` to plug the exti line with the GPIO
+* Choose the priority of interrupts with `nvic_set_priority`
+
 # usual README of our repositories
 
 Reminder: To clone the submodule in the same time, use `git clone --recurse-submodules`, then don't forget to build libopencm3. You need to execute `make install_udev` one time to add the permission to flash.
