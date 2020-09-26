@@ -1,3 +1,4 @@
+
 #include "timer.h"
 
 void _timer_setup(enum rcc_periph_clken rcc_clken, uint32_t timer_peripheral, uint32_t prescaler, uint32_t period){
