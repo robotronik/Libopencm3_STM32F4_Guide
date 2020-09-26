@@ -20,11 +20,11 @@
             "-I",
             "lowlevel/include",
             "-o",
-            "lowlevel/gpio.o",
-            "lowlevel/gpio.c"
+            "lowlevel/led.o",
+            "lowlevel/led.c"
         ],
         "directory": "/home/akko/robotronik/STM32F401REGuide",
-        "file": "lowlevel/gpio.c"
+        "file": "lowlevel/led.c"
     },
     {
         "arguments": [
@@ -47,7 +47,11 @@
             "-I",
             "lowlevel/include",
             "lowlevel/clock.o",
+            "lowlevel/exti.o",
             "lowlevel/gpio.o",
+            "lowlevel/led.o",
+            "lowlevel/pwm.o",
+            "lowlevel/timer.o",
             "lowlevel/uart.o",
             "-nostartfiles",
             "-o",
@@ -56,6 +60,33 @@
         ],
         "directory": "/home/akko/robotronik/STM32F401REGuide",
         "file": "mainTest.c"
+    },
+    {
+        "arguments": [
+            "/usr/bin/arm-none-eabi-gcc",
+            "-c",
+            "-Os",
+            "-std=gnu11",
+            "-fdiagnostics-color=always",
+            "-Wall",
+            "-Wextra",
+            "-g",
+            "-mcpu=cortex-m4",
+            "-mthumb",
+            "-mfloat-abi=hard",
+            "-mfpu=fpv4-sp-d16",
+            "-specs=nano.specs",
+            "-I",
+            "/home/akko/robotronik/STM32F401REGuide/hal_common/libopencm3/include",
+            "-DSTM32F4",
+            "-I",
+            "lowlevel/include",
+            "-o",
+            "lowlevel/clock.o",
+            "lowlevel/clock.c"
+        ],
+        "directory": "/home/akko/robotronik/STM32F401REGuide",
+        "file": "lowlevel/clock.c"
     },
     {
         "arguments": [
@@ -105,10 +136,91 @@
             "-I",
             "lowlevel/include",
             "-o",
-            "lowlevel/clock.o",
-            "lowlevel/clock.c"
+            "lowlevel/pwm.o",
+            "lowlevel/pwm.c"
         ],
         "directory": "/home/akko/robotronik/STM32F401REGuide",
-        "file": "lowlevel/clock.c"
+        "file": "lowlevel/pwm.c"
+    },
+    {
+        "arguments": [
+            "/usr/bin/arm-none-eabi-gcc",
+            "-c",
+            "-Os",
+            "-std=gnu11",
+            "-fdiagnostics-color=always",
+            "-Wall",
+            "-Wextra",
+            "-g",
+            "-mcpu=cortex-m4",
+            "-mthumb",
+            "-mfloat-abi=hard",
+            "-mfpu=fpv4-sp-d16",
+            "-specs=nano.specs",
+            "-I",
+            "/home/akko/robotronik/STM32F401REGuide/hal_common/libopencm3/include",
+            "-DSTM32F4",
+            "-I",
+            "lowlevel/include",
+            "-o",
+            "lowlevel/exti.o",
+            "lowlevel/exti.c"
+        ],
+        "directory": "/home/akko/robotronik/STM32F401REGuide",
+        "file": "lowlevel/exti.c"
+    },
+    {
+        "arguments": [
+            "/usr/bin/arm-none-eabi-gcc",
+            "-c",
+            "-Os",
+            "-std=gnu11",
+            "-fdiagnostics-color=always",
+            "-Wall",
+            "-Wextra",
+            "-g",
+            "-mcpu=cortex-m4",
+            "-mthumb",
+            "-mfloat-abi=hard",
+            "-mfpu=fpv4-sp-d16",
+            "-specs=nano.specs",
+            "-I",
+            "/home/akko/robotronik/STM32F401REGuide/hal_common/libopencm3/include",
+            "-DSTM32F4",
+            "-I",
+            "lowlevel/include",
+            "-o",
+            "lowlevel/timer.o",
+            "lowlevel/timer.c"
+        ],
+        "directory": "/home/akko/robotronik/STM32F401REGuide",
+        "file": "lowlevel/timer.c"
+    },
+    {
+        "arguments": [
+            "/usr/bin/arm-none-eabi-gcc",
+            "-c",
+            "-Os",
+            "-std=gnu11",
+            "-fdiagnostics-color=always",
+            "-Wall",
+            "-Wextra",
+            "-g",
+            "-mcpu=cortex-m4",
+            "-mthumb",
+            "-mfloat-abi=hard",
+            "-mfpu=fpv4-sp-d16",
+            "-specs=nano.specs",
+            "-I",
+            "/home/akko/robotronik/STM32F401REGuide/hal_common/libopencm3/include",
+            "-DSTM32F4",
+            "-I",
+            "lowlevel/include",
+            "-o",
+            "lowlevel/gpio.o",
+            "lowlevel/gpio.c"
+        ],
+        "directory": "/home/akko/robotronik/STM32F401REGuide",
+        "file": "lowlevel/gpio.c"
     }
 ]
