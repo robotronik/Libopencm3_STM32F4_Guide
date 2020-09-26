@@ -471,29 +471,6 @@ We want to make a PWM and gladly there are already PWM mode on STM32F4: *TIM_OCM
 
 # Exemple 3: Generate an interrupt from a GPIO output thanks to the EXTI perpipheral
 
-What is an interruption and why would you want one ?
-Imagine your robot is doing some action and at some point if one sensor picks up
-an obstacle you must stop what you are doing RIGHT now and do some specific 
-action (maybe turn on a light or stop the robot for instance). One naive idea
-would be to have some loop that periodically checks on the state of your sensor:
-one big problem with that is that you are totally blocking the normal flow of 
-execution of your program. What you want is some kind of code that will be called
-when the event "sensor picks up something" happens without checking yourself in
-a loop. Let's imagine that our "event" is the entry with our sensor going from 0
-to 1. If we imagine that the processor has some kind of mecanism to regularly
-check these event one issue would be that sometimes if the entry goes back to
-between two check up by the µC you would be missing the event. The solution here
-is that one module will keep a flag raised to 1 once the event happened. So here
-to sum up what's happening:
-* The sensor picks up something => it presents a 1 on an input
-* The module(exti) picks up this 1 and raise a flag (a 1) that the µC can read
-* The µC can read the flag whenever it has the time to treat the problem and the
-the flag stays risen as long as the event has not been dealt with.
-One last element to be complete is that when the µC sees the flag that alert about
-an event it has to know what piece of code should be executed in response, that
-is specified in the nested vector interrupt control that is one table that contains
-this information.
- 
 1. You first need to enable the clock SYSCFG which will handle the EXTI(for
 external interrupt). The idea is that your GPIO input will change state and
 when this change happens it will raise a flag that is a signal for the CPU
