@@ -1,6 +1,7 @@
 
 #include "timer.h"
 
+void _timer_setup(enum rcc_periph_clken rcc_clken, uint32_t timer_peripheral, uint32_t prescaler, uint32_t period){
 void _timer_setup(enum rcc_periph_clken rcc_clken, uint32_t timer_peripheral,uint32_t prescaler,uint32_t period){
 	/* Enable timer clock */
   rcc_periph_clock_enable(rcc_clken);
@@ -9,7 +10,7 @@ void _timer_setup(enum rcc_periph_clken rcc_clken, uint32_t timer_peripheral,uin
 
   timer_enable_break_main_output(timer_peripheral);
 	/* Reset TIM1 peripheral */
-  timer_set_prescaler(timer_peripheral,prescaler);
+  timer_set_prescaler(prescaler);
 	//timer_reset(timer_peripheral);
   timer_set_repetition_counter(timer_peripheral, 0);
 
