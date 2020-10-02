@@ -8,7 +8,8 @@ How to flash and write a program on a nucleo F401RE using libopencm3
     * `git clone --recurse-submodules URL_OF_THE_REPO`
     * We will now assume your working directory is this folder ! (`cd` into it please)
 2. Install the necessary tools to cross compile and flash your code
-    * `sudo pacman -S arm-none-eabi-gcc arm-none-eabi-newlib openocd stlink`
+    * `sudo pacman -S arm-none-eabi-gcc arm-none-eabi-newlib openocd`
+    * `sudo apt install gcc-arm-none-eabi libnewlib-arm-none-eabi openocd`
 3. We now have to build the library that reads and writes in the STM registers for us : libopencm3!
     * `cd hal_common/libopencm3`
     * `make`

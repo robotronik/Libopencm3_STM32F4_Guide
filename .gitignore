@@ -12,3 +12,6 @@
 
 # doxygen output
 doxygen
+
+# libopencm3 compile command
+hal_common/libopencm3/compile_commands.json
