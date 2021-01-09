@@ -1,4 +1,4 @@
-# STM32F401RE Guide
+# Libopencm3 STM32F4 Guide
 How to flash and write a program on a nucleo F401RE using libopencm3
 
 # Step by step !
