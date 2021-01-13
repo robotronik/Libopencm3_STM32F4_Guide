@@ -470,7 +470,7 @@ We want to make a PWM and gladly there are already PWM mode on STM32F4: *TIM_OCM
 
 **Bonus**: Using a timer enables to do anything in the main, parallel to the timer. We can for example imagine a modification of example 1 using a timer so we can execute code while the LED is blinking.
 
-# Example 3: Generate an interrupt from a GPIO output thanks to the EXTI perpipheral
+## Example 3: Generate an interrupt from a GPIO output thanks to the EXTI perpipheral
 
 1. You first need to enable the clock SYSCFG which will handle the EXTI(for
 external interrupt). The idea is that your GPIO input will change state and
@@ -503,7 +503,7 @@ We have to initialize the GPIO as an input as we did before.
 * Use `_limit_switch_init` to plug the exti line with the GPIO
 * Choose the priority of interrupts with `nvic_set_priority`
 
-# Example 4: Timer interrupt service routines or how to call a function from a timer event
+## Example 4: Timer interrupt service routines or how to call a function from a timer event
 I hope you understood everything we have done before because we will need it in this example. The difference between this example and the previous one (EXTI) is that exti are interrupt from a given GPIO and this time we want an interruption only based on a timer. 
 
 
@@ -561,19 +561,20 @@ We will assume your `main` is empty and we will write in `intime.c` and `intime.
     1. We want a period of 500ms
 
         ```
-        #define TIM_PRESCALE	    (84)
-        #define TIM_PERIOD	    	(500000)
+        #define TIM_PRESCALE        (84)
+        #define TIM_PERIOD          (500000)
         ```
 
-    2. We will use timer 4 and output channel 1
+    2. We will use **timer 4** and **output channel 1**
 
         ```
-        #define TIM_RCC			RCC_TIM4
-        #define TIM				TIM4
-        #define TIM_OC_ID       TIM_OC1
+        #define TIM_RCC             RCC_TIM4
+        #define TIM                 TIM4
+        #define TIM_OC_ID           TIM_OC1
         ```
         
     We need some special parameter for the OC as follow
+
     3. The OC mode is frozen because we don't have any connection to any GPIO
 
         ```
