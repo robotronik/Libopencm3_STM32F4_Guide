@@ -4,11 +4,14 @@
 #include "led.h"
 #include "pwm.h"
 #include "exti.h"
+#include "intime.h"
 
 void test_led(uint32_t delay);
 void test_pwm();
 void test_uart();
 void test_exti();
+void test_timer_interrupt();
+
 
 int main() {
     //setup
@@ -16,9 +19,11 @@ int main() {
   //exti_setup();
 	//Choose one and only one test
 	//test_led(100);
-	test_pwm();
+	//test_pwm();
 	//test_uart();
 	//test_exti();
+    test_timer_interrupt();
+
 }
 
 void test_led(uint32_t delay){
@@ -61,5 +66,14 @@ void test_exti(){
             fprintf(stderr,"j'appuie sur le bouton\n");
         }
         delay_ms(500);
+    }
+}
+
+void test_timer_interrupt(){
+    uart_setup();
+    _gpio_setup_pin(RCC_GPIOA,GPIOA,GPIO5,GPIO_MODE_OUTPUT);
+    timer_setup_interrupt();
+    while (1){
+        
     }
 }

@@ -314,7 +314,7 @@ int main() {
 
     `clock_setup()`
 
-2. Create or Edit timer.c
+2. Create or Edit `timer.c`
 
 	`touch lowlevel/timer.c`
 
@@ -470,7 +470,7 @@ We want to make a PWM and gladly there are already PWM mode on STM32F4: *TIM_OCM
 
 **Bonus**: Using a timer enables to do anything in the main, parallel to the timer. We can for example imagine a modification of example 1 using a timer so we can execute code while the LED is blinking.
 
-# Exemple 3: Generate an interrupt from a GPIO output thanks to the EXTI perpipheral
+# Example 3: Generate an interrupt from a GPIO output thanks to the EXTI perpipheral
 
 1. You first need to enable the clock SYSCFG which will handle the EXTI(for
 external interrupt). The idea is that your GPIO input will change state and
@@ -502,6 +502,162 @@ We have to initialize the GPIO as an input as we did before.
 * Setup the port as input `gpio_mode_setup`
 * Use `_limit_switch_init` to plug the exti line with the GPIO
 * Choose the priority of interrupts with `nvic_set_priority`
+
+# Example 4: Timer interrupt service routines or how to call a function from a timer event
+I hope you understood everything we have done before because we will need it in this example. The difference between this example and the previous one (EXTI) is that exti are interrupt from a given GPIO and this time we want an interruption only based on a timer. 
+
+
+The scenario we are proposing in this example is as follow: We want to call a function named routine (for example the acquisition procedure of a sensor) every 500 ms. Therefore we want to link a timer to an ISR (Interrupt Service Routine).
+In our routine we will print something on the debug UART and toggle a LED.
+
+We will assume your `main` is empty and we will write in `intime.c` and `intime.h`.
+
+1. Let's setup all needed peripheral in `main`
+
+    1. in `main()`
+        ```
+        clock_setup();
+        ```
+
+    2. add a test
+        ```
+        void test_timer_interrupt()
+        ```
+
+    3. we want to write on the debug uart and toggle a led in the routine, so setup uart and the LED PIN (PA5)
+
+        ```
+        void test_timer_interrupt(){
+            uart_setup();
+            _gpio_setup_pin(RCC_GPIOA,GPIOA,GPIO5,GPIO_MODE_OUTPUT);
+            timer_setup_interrupt();
+            while (1){
+                
+            }
+        }
+        ```
+
+    4. call the test in `main()`
+    
+2. Create or edit `intime.c` and `intime.h`
+
+    ```
+    touch lowlevel/intime.c lowlevel/include/intime.h
+
+    ```
+
+3. In `intime.h` all definitions:
+
+    0. include
+
+        ```
+        #include <libopencm3/stm32/timer.h>
+        #include <libopencm3/cm3/nvic.h>
+        
+        #include "timer.h"
+        #include "uart.h" //only needed to print on uart in the routine
+        ```
+
+    1. We want a period of 500ms
+
+        ```
+        #define TIM_PRESCALE	    (84)
+        #define TIM_PERIOD	    	(500000)
+        ```
+
+    2. We will use timer 4 and output channel 1
+
+        ```
+        #define TIM_RCC			RCC_TIM4
+        #define TIM				TIM4
+        #define TIM_OC_ID       TIM_OC1
+        ```
+        
+    We need some special parameter for the OC as follow
+    3. The OC mode is frozen because we don't have any connection to any GPIO
+
+        ```
+        #define TIM_OC_MODE     TIM_OCM_FROZEN
+        ```  
+
+    4. We want to make interruption on the timer 4 so we have to enable the interrupt controller NVIC (Nested Vector Interrupt Controller).
+
+        ```
+        #define TIM_NVIC        NVIC_TIM4_IRQ
+        ```
+
+    5. For timers we need to set other register to enable interruption on the channel 1. in the DIER (DMA/Interrupt Enable Register) we need to to enable interruption (IE) for the type CC (Capture/Compare) => DIER_CC1ER.
+
+        ```
+        #define TIM_DIER_CCIE       TIM_DIER_CC1IE
+        ```
+
+    6. Now we need to identify with a status register (SR) the given interruption over the interrupt flag (IF) of type CC and for channel 1 => SR_CC1IF.
+
+        ```
+        #define TIM_SR_CCIF         TIM_SR_CC1IF
+        ```
+
+4. We will need two functions for this example a setup function `timer_setup_interrupt` and the ISR with exactly this name `tim4_isr` with the following prototype:
+
+    ```
+    void timer_setup_interrupt();
+    void tim4_isr();
+    ```
+
+5. In `intime.c` the setup function
+
+    1. Setup the timer and oc using the functions written in `timer`
+
+        ```
+        _timer_setup(TIM_RCC,TIM,TIM_PRESCALE,TIM_PERIOD);
+        _timer_setup_output_c(TIM,TIM_OC_ID,TIM_OC_MODE,0);
+        ```
+
+    2. Enable interrupt request (IRQ) on a NVIC level
+
+        ```
+        nvic_enable_irq(TIM_NVIC);
+        ```
+
+    3. Enable IRQ on a Timer level for OC1
+
+        ```
+        timer_enable_irq(TIM, TIM_DIER_CCIE);
+        ```
+
+    4. Start the timer
+
+        ```
+        _timer_start(TIM);
+        ```
+
+6. the ISR in `tim4_isr()`
+
+    1. Check the exact interruption over the flag
+
+        ```
+        if(timer_get_flag(TIM, TIM_SR_CCIF))
+        ```
+
+    2. Write the routine (Here write on the debug uart and toggle led, can be what you want)
+        ```
+        //do something
+        fprintf(stderr,"interrupt from timer\n");
+        gpio_toggle(GPIOA,GPIO5);
+        ```
+
+    3. Clear the flag to reset status
+
+        ```
+        timer_clear_flag(TIM, TIM_SR_CCIF);
+        ```
+
+7. You are now intimate with timer, **Party Very Hard**
+
+**Bonus**: Using only one timer we can only have one period but we can have multiple routine called per period. Using multiple OC and modifying the oc_value of each channel we can schedule some routine every period. Setup different OC in `timer_setup_interrupt()` and check the different flags in the ISR.
+
+## Incoming Part about memory and the possibility to store values in the ROM 
 
 # usual README of our repositories
 
