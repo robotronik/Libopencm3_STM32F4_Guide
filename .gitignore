@@ -1,5 +1,8 @@
-# Atom editor
+# Editor
 .vscode
+
+# compile command
+compile_commands.json
 
 # built files
 *.o
