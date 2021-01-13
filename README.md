@@ -558,7 +558,7 @@ We will assume your `main` is empty and we will write in `intime.c` and `intime.
         #include "uart.h" //only needed to print on uart in the routine
         ```
 
-    1. We want a period of 500ms
+    1. We want a period of **500ms**
 
         ```
         #define TIM_PRESCALE        (84)
@@ -578,22 +578,22 @@ We will assume your `main` is empty and we will write in `intime.c` and `intime.
     3. The OC mode is frozen because we don't have any connection to any GPIO
 
         ```
-        #define TIM_OC_MODE     TIM_OCM_FROZEN
+        #define TIM_OC_MODE         TIM_OCM_FROZEN
         ```  
 
     4. We want to make interruption on the timer 4 so we have to enable the interrupt controller NVIC (Nested Vector Interrupt Controller).
 
         ```
-        #define TIM_NVIC        NVIC_TIM4_IRQ
+        #define TIM_NVIC            NVIC_TIM4_IRQ
         ```
 
-    5. For timers we need to set other register to enable interruption on the channel 1. in the DIER (DMA/Interrupt Enable Register) we need to to enable interruption (IE) for the type CC (Capture/Compare) => DIER_CC1ER.
+    5. For timers we need to set other register to enable interruption on the channel 1. in the DIER (DMA/Interrupt Enable Register) we need to to enable interruption (IE) for the type CC (Capture/Compare) => `DIER_CC1ER`.
 
         ```
         #define TIM_DIER_CCIE       TIM_DIER_CC1IE
         ```
 
-    6. Now we need to identify with a status register (SR) the given interruption over the interrupt flag (IF) of type CC and for channel 1 => SR_CC1IF.
+    6. Now we need to identify with a status register (SR) the given interruption over the interrupt flag (IF) of type CC and for channel 1 => `SR_CC1IF`.
 
         ```
         #define TIM_SR_CCIF         TIM_SR_CC1IF
