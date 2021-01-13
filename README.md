@@ -575,7 +575,7 @@ We will assume your `main` is empty and we will write in `intime.c` and `intime.
         
     We need some special parameter for the OC as follow
 
-    3. The OC mode is frozen because we don't have any connection to any GPIO
+    3. The OC mode is **frozen** because we don't have any connection to any GPIO
 
         ```
         #define TIM_OC_MODE         TIM_OCM_FROZEN
@@ -599,7 +599,7 @@ We will assume your `main` is empty and we will write in `intime.c` and `intime.
         #define TIM_SR_CCIF         TIM_SR_CC1IF
         ```
 
-4. We will need two functions for this example a setup function `timer_setup_interrupt` and the ISR with exactly this name `tim4_isr` with the following prototype:
+4. We will need two functions for this example a setup function `timer_setup_interrupt` and the ISR with **exactly this name** `tim4_isr` with the following prototype:
 
     ```
     void timer_setup_interrupt();
@@ -641,9 +641,9 @@ We will assume your `main` is empty and we will write in `intime.c` and `intime.
         if(timer_get_flag(TIM, TIM_SR_CCIF))
         ```
 
-    2. Write the routine (Here write on the debug uart and toggle led, can be what you want)
+    2. Write the routine (Here write on the debug uart and toggle led, can be anything you want)
         ```
-        //do something
+        //do anything
         fprintf(stderr,"interrupt from timer\n");
         gpio_toggle(GPIOA,GPIO5);
         ```
@@ -654,9 +654,11 @@ We will assume your `main` is empty and we will write in `intime.c` and `intime.
         timer_clear_flag(TIM, TIM_SR_CCIF);
         ```
 
-7. You are now intimate with timer, **Party Very Hard**
+7. You are now *intimate* with timer, **Party Very Hard**
 
-**Bonus**: Using only one timer we can only have one period but we can have multiple routine called per period. Using multiple OC and modifying the oc_value of each channel we can schedule some routine every period. Setup different OC in `timer_setup_interrupt()` and check the different flags in the ISR.
+**Bonus**: Using only one timer we can only have one period but we can have multiple routine called per period. Using multiple OC and modifying the oc_value of each channel, we can schedule some routine every period. 
+
+Setup different OC in `timer_setup_interrupt()` and check the different flags in the ISR.
 
 ## Incoming Part about memory and the possibility to store values in the ROM 
 
